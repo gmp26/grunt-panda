@@ -2,10 +2,10 @@
 
 > Compile markdown using [pandoc](http://johnmacfarlane.net/pandoc/) via the [jandoc](https://npmjs.org/package/jandoc) API
 
-<div class="alert alert-error">
+<div><div class="alert alert-error">
   <button type="button" class="close" data-dismiss="alert">&times;</button>
   <strong>Warning!</strong> Unstable - do not use (yet).
-</div>
+</div></div>
 
 ## Getting Started
 This plugin requires Grunt `~0.4.1`, and Pandoc.
