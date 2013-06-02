@@ -2,8 +2,6 @@
 
 > Compile markdown using [pandoc](http://johnmacfarlane.net/pandoc/) via the [jandoc](https://npmjs.org/package/jandoc) API
 
-__Warning!__ Unstable - do not use (yet).
-
 ## Getting Started
 This plugin requires Grunt `~0.4.1`, and Pandoc.
 
