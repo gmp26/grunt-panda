@@ -2,11 +2,16 @@
 
 > Compile markdown using [pandoc](http://johnmacfarlane.net/pandoc/) via the [jandoc](https://npmjs.org/package/jandoc) API
 
+<div class="alert alert-error">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  <strong>Warning!</strong> Unstable - do not use (yet).
+</div>
+
 ## Getting Started
 This plugin requires Grunt `~0.4.1`, and Pandoc.
 
-The Jandoc node module calls pandoc using shell commands. I'd guess this would work on Windows provided
-pandoc is available in the grunt bash shell - but it's untested.
+The Jandoc node module calls pandoc using shell commands. I'd guess this will work on Windows provided
+pandoc is available in the grunt bash shell.
 
 If you haven't used [Grunt](http://gruntjs.com/) before, be sure to check out the [Getting Started](http://gruntjs.com/getting-started) guide, as it explains how to create a [Gruntfile](http://gruntjs.com/sample-gruntfile) as well as install and use Grunt plugins. Once you're familiar with that process, you may install this plugin with this command:
 
@@ -25,7 +30,7 @@ grunt.loadNpmTasks 'grunt-panda'
 ### Overview
 In your project's Gruntfile, add a section named `panda` to the data object passed into `grunt.initConfig()`.
 
-```coffeescript
+```coffee
 grunt.initConfig
   panda: 
     options:

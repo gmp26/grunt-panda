@@ -35,19 +35,24 @@ module.exports = (grunt) ->
 
       default_options:
         options:
-          stripMetadata: true
+          stripMeta: true
+          process: true
           mathjax: true
           read: "markdown"
         files:
           "tmp/output.html": "test/fixtures/input.md"
 
-      html_md:
+      multiples1:
         options:
-          mathjax: true
-          read: "markdown"
+          stripMeta: false
+          process: false
+          mathjax: false
         files:
-          "tmp/html_md.html": ["test/fixtures/input.md"]
-
+          "tmp/m1.html": [
+            "test/fixtures/input1.md"
+            "test/fixtures/input2.md"
+            "test/fixtures/input3.md"
+          ]
     
     # Unit tests.
     nodeunit:
