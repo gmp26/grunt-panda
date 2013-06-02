@@ -1,6 +1,8 @@
 "use strict"
 grunt = require("grunt")
 
+
+
 #
 #  ======== A Handy Little Nodeunit Reference ========
 #  https://github.com/caolan/nodeunit
@@ -25,16 +27,32 @@ exports.panda =
     # setup here if necessary
     done()
 
-  default_options: (test) ->
+  test1: (test) ->
     test.expect 1
-    actual = grunt.file.read("tmp/output.html")
-    expected = grunt.file.read("test/expected/output.html")
+    actual = grunt.file.read("tmp/test1.html")
+    expected = grunt.file.read("test/expected/test1.html")
     test.equal actual, expected, "markdown should compile to html"
     test.done()
 
-  multiples: (test) ->
+  
+  test2: (test) ->
     test.expect 1
-    actual = grunt.file.read("tmp/mutliples.html")
-    expected = grunt.file.read("test/expected/multiples.html")
+    actual = grunt.file.read("tmp/test2.html")
+    expected = grunt.file.read("test/expected/test2.html")
     test.equal actual, expected, "multiple inputs should concatenate"
     test.done()
+
+  test3: (test) ->
+    test.expect 3
+    exists = grunt.file.exists("tmp/test3.pdf")
+    test.ok(exists, "it should create a pdf")
+
+    actual4 = grunt.file.read("tmp/test4.html")
+    expected4 = grunt.file.read("test/expected/test4.html")
+    test.equal actual4, expected4, "it should create multiple outputs"
+
+    exists = grunt.file.exists("tmp/test5.docx")
+    test.ok(exists, "it should create a docx")
+
+    test.done()
+  

@@ -7,8 +7,8 @@
 # 
 "use strict"
 
-jandoc = require 'jandoc'
-{isType} = require 'prelude-ls'
+async = require 'async'
+cmdLine   = require('child_process').exec
 
 module.exports = (grunt) ->
   
@@ -16,80 +16,74 @@ module.exports = (grunt) ->
   # creation: http://gruntjs.com/creating-tasks
   grunt.registerMultiTask "panda", "Compile markdown using pandoc via jandoc.", ->
     
-    # Merge task-specific and/or target-specific options with these defaults.
-    options = @options!
+    done = @async!
 
-    grunt.log.writeln "options? = "+options?
+    # Merge task-specific and/or target-specific options with these defaults.
+    options = @options({
+      stripMeta: "---"
+      separator: grunt.util.linefeed + grunt.util.linefeed
+      process: false
+      infile: "tmp/inputs.md"
+      format: ""
+      pandocOptions: "--mathjax"
+    })
 
     # Iterate over all specified file groups.
-    @files.forEach (f) ->
+    # Spawn at most 3 child pandoc processes
+    async.eachLimit @files, 3, iterator, done
 
-      if is-type "Array" f.src
-        grunt.log.writeln "Multiple inputs will be concatenated into one."
+    function iterator(f, callback)
 
-        jandoc {
-          input: concatenate f.src, options
-          output: f.dest
-        }
+      input = concatenate f.src, options
 
-      else
-        grunt.log.writeln "Not Array"
-        jandoc {
-          input: f.src
-          output: f.dest
-        }
+      infile = options.infile
+      outfile = f.dest
+
+      format = if outfile.match /.html$/ then "-t html5" else ""
+      format = options.format unless options.format == ""
+
+      grunt.log.writeln "format = #format"
+
+      # write the source file
+      grunt.file.write infile, input
+
+      cmd = "pandoc -o #{outfile} #{format} #{options.pandocOptions} #{infile}"
+      cmdLine cmd,  (err, stdout) ->
+        if err
+          grunt.fatal err
+        callback(err)
 
   function concatenate (paths, options)
+   
+    fpaths = paths.filter (path) ->
+      unless grunt.file.exists(path)
+        grunt.log.warn "Input file \"" + path + "\" not found."
+        false
+      else
+        true
+    
+    fpaths.map((path) ->
+      grunt.log.writeln "Processing #{path}"
 
-    /*  
-    # Merge task-specific and/or target-specific options with these defaults.
-    options = @options(
-      separator: grunt.util.linefeed
-      banner: ""
-      footer: ""
-      stripBanners: false
-      process: false
-    )
-    
-    # Normalize boolean options that accept options objects.
-    options.stripBanners = {}  if options.stripBanners is true
-    options.process = {}  if options.process is true
-    
-    # Process banner and footer.
-    banner = grunt.template.process(options.banner)
-    footer = grunt.template.process(options.footer)
-    
-    # Iterate over all src-dest file pairs.
-    @files.forEach (f) ->
-      
-      # Concat banner + specified files + footer.
-      
-      # Warn on and remove invalid source files (if nonull was set).
-      
-      # Read file source.
-      
-      # Process files as templates if requested.
-      
-      # Strip banners if requested.
-      src = banner + f.src.filter((filepath) ->
-        unless grunt.file.exists(filepath)
-          grunt.log.warn "Source file \"" + filepath + "\" not found."
-          false
-        else
-          true
-      ).map((filepath) ->
-        src = grunt.file.read(filepath)
-        if typeof options.process is "function"
-          src = options.process(src, filepath)
-        else src = grunt.template.process(src, options.process)  if options.process
-        src = comment.stripBanner(src, options.stripBanners)  if options.stripBanners
-        src
-      ).join(options.separator) + footer
-      
-      # Write the destination file.
-      grunt.file.write f.dest, src
-      
-      # Print a success message.
-      grunt.log.writeln "File \"" + f.dest + "\" created."
+      src = grunt.file.read(path)
+      if typeof options.process is "function"
+        src = options.process(src, path)
+      else 
+        src = grunt.template.process(src, options.process)  if options.process
+        src = stripMeta(path, src, options.stripMeta)  if options.stripMeta and options.stripMeta != ""
+      src
+    ).join(options.separator)
 
-    */
+  function stripMeta (path, content, delim)
+    # grunt.log.writeln("STRIP #{delim} from #{path}")
+    return content unless content.indexOf(delim) == 0
+
+    eDelim = grunt.util.linefeed + delim + grunt.util.linefeed
+    endMeta = content.indexOf eDelim
+    if endMeta < 0
+      grunt.log.warn "No metadata end marker in #{path}"
+      return content
+    else
+      startContent = endMeta + eDelim.length
+      return content.substr startContent
+

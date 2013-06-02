@@ -2,10 +2,7 @@
 
 > Compile markdown using [pandoc](http://johnmacfarlane.net/pandoc/) via the [jandoc](https://npmjs.org/package/jandoc) API
 
-<div class="alert alert-error">
-  <button type="button" class="close" data-dismiss="alert">&times;</button>
-  <strong>Warning!</strong> Unstable - do not use (yet).
-</div>
+__Warning!__ Unstable - do not use (yet).
 
 ## Getting Started
 This plugin requires Grunt `~0.4.1`, and Pandoc.
@@ -45,84 +42,78 @@ grunt.initConfig
 
 ### Options
 
-In addition to the jandoc options listed below, you may enter:
+* __stripMeta:__ STRING.
+  Set to "---" by default.
+  If the input files contain metadata in the header, 
+  this can be removed by setting here the separator string. 
+  This separates the meatadata from the markdown content. 
+  The metadata and the separator will be ignored. 
+  The separator must start at the beginning of the line. 
+  If no separator is seen at all, the whole content will be processed.
 
- * stripMeta: STRING. If the input files contain metadata in the header, this can be removed by setting here the
- separator string. This separates the meatadata from the markdown content. The metadata and the separator will be ignored. The separator must start at the beginning of the line. If no separator is seen at all, the whole content will be processed.
+* __infile:__ PATH (relative to Gruntfile).
+  Set to "tmp/inputs.md" by default 
+  The name of the temporary file used to accumulate multiple input files
+  that are being concatenated before sending them to pandoc
 
-These are from jandoc - they correspond to pandoc command line options
-if you replace camel case option names with hyphenated lower case option names.
+* __pandocOptions:__ BOOLEAN.
+  Set to "--mathjax" by default
+  Can be used to pass any other options along to pandoc.
 
- * input: DIR/FILE PATH
- * output: DIR/FILE PATH
- * read: FILE TYPE STRING
- * write: FILE TYPE STRING
- * dataDir: DIR PATH
- * strict: BOOLEAN
- * parseRaw: BOOLEAN
- * smart: BOOLEAN  // refers to smart quotes
- * oldDashes: BOOLEAN
- * baseHeaderLevel: NUMBER
- * indentedCodeClasses: STRING
- * nomalize: BOOLEAN
- * preserveTabs: BOOLEAN
- * tabStop: NUMBER
- * standalone: BOOLEAN
- * template: FILE PATH
- * variable: OBJECT
- * printDefaultTemplate: FILE PATH
- * noWrap: BOOLEAN
- * columns: NUMBER
- * toc: BOOLEAN
- * noHighlight: BOOLEAN
- * highlightStyle: STRING
- * includeInHeader: FILE PATH
- * includeBeforeBody: FILE PATH
- * includeAfterBody: FILE PATH
- * selfContained: BOOLEAN
- * offline: BOOLEAN
- * html5: BOOLEAN
- * ascii: BOOLEAN
- * referenceLinks: BOOLEAN
- * atxHeaders: BOOLEAN
- * chapters: BOOLEAN
- * numberSections: BOOLEAN
- * noTexLigatures: BOOLEAN
- * listings: BOOLEAN
- * incremental: BOOLEAN
- * slideLevel: NUMBER
- * sectionDivs: BOOLEAN
- * emailObfuscation: STRING (none || javascript || references)
- * idPrefix: STRING
- * titlePrefix: STRING
- * css: URL PATH
- * referenceOdt: FILE PATH
- * referenceDocx: FILE PATH
- * epubStylesheet: FILE PATH
- * epubCoverImage: FILE PATH
- * epubMetadata: FILE PATH
- * epubEmbedFont: ARRAY
- * latexEngine: PROGRAM NAME
- * bibliography: FILE PATH
- * csl: FILE PATH
- * citationAbbreviations: FILE PATH
- * natbib: BOOLEAN
- * biblatex: BOOLEAN
- * latexmathml: URL PATH
- * asciimathml: URL PATH
- * mathml: URL PATH
- * mimetex: URL PATH
- * webtex: URL PATH
- * jsmath: URL PATH
- * mathjax: URL PATH
- * gladtex: BOOLEAN
- * dumpArgs: BOOLEAN
- * ignoreArgs: BOOLEAN
- * version: BOOLEAN
- * help: BOOLEAN
- 
+* __separator:__ STRING.
+  By default this is set to 2 OS independent line feeds.
+
+* __process:__ STRING.
+  Set to the empty by default. Default: empty string
+  This string will be prepended to the beginning of the concatenated output. 
+  It is processed using grunt.template.process, using the default options.
+
+
 ### Usage Examples
+```coffee
+    panda:
 
+      test1:
+        options:
+          process: false
+          mathjax: true
+        files:
+          "tmp/test1.html": "test/fixtures/input.md"
+
+      test2:
+        options:
+          process: false
+          pandocOptions: "--mathml"
+        files:
+          "tmp/test2.html": [
+            "test/fixtures/input1.md"
+            "test/fixtures/input2.md"
+            "test/fixtures/input3.md"
+          ]
+
+      test3:
+        options:
+          process: false
+ 
+        files:
+          # Try not to mix output formats in one task like this
+          "tmp/test3.pdf": [
+            "test/fixtures/input1.md"
+            "test/fixtures/input2.md"
+            "test/fixtures/input3.md"
+          ]
+          "tmp/test4.html": [
+            "test/fixtures/input1.md"
+            "test/fixtures/input2.md"
+            "test/fixtures/input3.md"
+          ]
+          "tmp/test5.docx": [
+            "test/fixtures/input1.md"
+            "test/fixtures/input2.md"
+            "test/fixtures/input3.md"
+          ]
+
+```
 Not yet defined.
 
 ### Error handling

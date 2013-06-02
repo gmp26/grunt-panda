@@ -2,3 +2,5 @@ node_modules
 npm-debug.log
 panda.js
 panda_test.js
+tmp/*
+lf

@@ -10,6 +10,7 @@ module.exports = (grunt) ->
   
   # Project configuration.
   grunt.initConfig
+
     jshint:
       all: ["tasks/*.js", "<%= nodeunit.tests %>"]
       options:
@@ -33,26 +34,43 @@ module.exports = (grunt) ->
     # Configuration to be run (and then tested).
     panda:
 
-      default_options:
+      test1:
         options:
-          stripMeta: true
-          process: true
-          mathjax: true
-          read: "markdown"
-        files:
-          "tmp/output.html": "test/fixtures/input.md"
-
-      multiples1:
-        options:
-          stripMeta: false
           process: false
-          mathjax: false
+         files:
+          "tmp/test1.html": "test/fixtures/input.md"
+
+      test2:
+        options:
+          process: false
+          pandocOptions: "--mathml"
         files:
-          "tmp/m1.html": [
+          "tmp/test2.html": [
             "test/fixtures/input1.md"
             "test/fixtures/input2.md"
             "test/fixtures/input3.md"
           ]
+
+      test3:
+        options:
+          process: false
+        files:
+          "tmp/test3.pdf": [
+            "test/fixtures/input1.md"
+            "test/fixtures/input2.md"
+            "test/fixtures/input3.md"
+          ]
+          "tmp/test4.html": [
+            "test/fixtures/input1.md"
+            "test/fixtures/input2.md"
+            "test/fixtures/input3.md"
+          ]
+          "tmp/test5.docx": [
+            "test/fixtures/input1.md"
+            "test/fixtures/input2.md"
+            "test/fixtures/input3.md"
+          ]
+
     
     # Unit tests.
     nodeunit:
@@ -62,7 +80,6 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks "grunt-contrib-jshint"
   grunt.loadNpmTasks "grunt-contrib-clean"
   grunt.loadNpmTasks "grunt-contrib-nodeunit"
-  #grunt.loadNpmTasks "grunt-contrib-coffee"
   grunt.loadNpmTasks "grunt-contrib-concat"
   grunt.loadNpmTasks "grunt-livescript"
   
@@ -77,4 +94,5 @@ module.exports = (grunt) ->
   grunt.registerTask "test", ["clean", "panda", "nodeunit"]
   
   # By default, lint and run all tests.
-  grunt.registerTask "default", ["jshint", "test"]
+  grunt.registerTask "default", ["test"]
+  #grunt.registerTask "default", ["jshint", "test"]
