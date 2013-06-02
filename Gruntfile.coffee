@@ -35,6 +35,7 @@ module.exports = (grunt) ->
 
       default_options:
         options:
+          stripMetadata: true
           mathjax: true
           read: "markdown"
         files:
@@ -56,7 +57,8 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks "grunt-contrib-jshint"
   grunt.loadNpmTasks "grunt-contrib-clean"
   grunt.loadNpmTasks "grunt-contrib-nodeunit"
-  grunt.loadNpmTasks "grunt-contrib-coffee"
+  #grunt.loadNpmTasks "grunt-contrib-coffee"
+  grunt.loadNpmTasks "grunt-contrib-concat"
   grunt.loadNpmTasks "grunt-livescript"
   
   # Compile the panda task and tests

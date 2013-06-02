@@ -1,9 +1,12 @@
 # grunt-panda
 
-> Compile markdown using pandoc via  the jandoc API
+> Compile markdown using [pandoc](http://johnmacfarlane.net/pandoc/) via the [jandoc](https://npmjs.org/package/jandoc) API
 
 ## Getting Started
-This plugin requires Grunt `~0.4.1` and a unix shell in which to run [pandoc](http://johnmacfarlane.net/pandoc/README.html).
+This plugin requires Grunt `~0.4.1`, and Pandoc.
+
+The Jandoc node module calls pandoc using shell commands. I'd guess this would work on Windows provided
+pandoc is available in the grunt bash shell - but it's untested.
 
 If you haven't used [Grunt](http://gruntjs.com/) before, be sure to check out the [Getting Started](http://gruntjs.com/getting-started) guide, as it explains how to create a [Gruntfile](http://gruntjs.com/sample-gruntfile) as well as install and use Grunt plugins. Once you're familiar with that process, you may install this plugin with this command:
 
@@ -22,24 +25,25 @@ grunt.loadNpmTasks 'grunt-panda'
 ### Overview
 In your project's Gruntfile, add a section named `panda` to the data object passed into `grunt.initConfig()`.
 
-```js
-grunt.initConfig({
-  panda: {
-    options: {
-      // See jandoc documentation, and the full list 
-      // in node_modules/jandoc/jandoc.js
-    },
-    files: {
-      // Specify src and dest files in the usual grunt manner.
-      // Multiple input files (i.e. src files in an array) will be
-      // concatenated with a blank line between each file before
-      // offering then as a single file to jandoc • pandoc.
-    },
-  },
-})
+```coffeescript
+grunt.initConfig
+  panda: 
+    options:
+      # see below
+    files:
+      # Specify src and dest files in the usual grunt manner.
+      # Multiple input files (i.e. src files in an array) will be
+      # concatenated with a blank line between each file before
+      # offering then as a single file to jandoc • pandoc.
+
 ```
 
 ### Options
+
+In addition to the jandoc options listed below, you may enter:
+
+ * stripMeta: STRING. If the input files contain metadata in the header, this can be removed by setting here the
+ separator string. This separates the meatadata from the markdown content. The metadata and the separator will be ignored. The separator must start at the beginning of the line. If no separator is seen at all, the whole content will be processed.
 
 These are from jandoc - they correspond to pandoc command line options
 if you replace camel case option names with hyphenated lower case option names.
