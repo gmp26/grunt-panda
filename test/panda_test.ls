@@ -32,9 +32,9 @@ exports.panda =
     test.equal actual, expected, "markdown should compile to html"
     test.done()
 
-  html_md: (test) ->
+  multiples: (test) ->
     test.expect 1
-    actual = grunt.file.read("tmp/html_md.html")
-    expected = grunt.file.read("test/expected/output.html")
-    test.equal actual, expected, "options should affect result"
+    actual = grunt.file.read("tmp/mutliples.html")
+    expected = grunt.file.read("test/expected/multiples.html")
+    test.equal actual, expected, "multiple inputs should concatenate"
     test.done()
