@@ -42,12 +42,12 @@ module.exports = (grunt) ->
       format = if outfile.match /.html$/ then "-t html5" else ""
       format = options.format unless options.format == ""
 
-      grunt.log.writeln "format = #format"
-
       # write the source file
       grunt.file.write infile, input
 
       cmd = "pandoc -o #{outfile} #{format} #{options.pandocOptions} #{infile}"
+      grunt.log.writeln "running: #cmd"
+
       cmdLine cmd,  (err, stdout) ->
         if err
           grunt.fatal err
@@ -70,18 +70,16 @@ module.exports = (grunt) ->
         src = options.process(src, path)
       else 
         src = grunt.template.process(src, options.process)  if options.process
-        src = stripMeta(path, src, options.stripMeta)  if options.stripMeta and options.stripMeta != ""
-      src
+
+      src = stripMeta(path, src, options.stripMeta)  if options.stripMeta and options.stripMeta != ""
     ).join(options.separator)
 
   function stripMeta (path, content, delim)
     # grunt.log.writeln("STRIP #{delim} from #{path}")
-    return content unless content.indexOf(delim) == 0
 
     eDelim = grunt.util.linefeed + delim + grunt.util.linefeed
     endMeta = content.indexOf eDelim
     if endMeta < 0
-      grunt.log.warn "No metadata end marker in #{path}"
       return content
     else
       startContent = endMeta + eDelim.length

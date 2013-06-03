@@ -125,6 +125,24 @@ Process source files as [templates](http://gruntjs.com/configuring-tasks#templat
 The task should fail reporting any errors encountered in pandoc.
 Use grunt -v for more detailed reporting.
 
+If you do not have Pandoc installed, test1 will fail with:
+
+```
+Running "panda:test1" (panda) task
+Processing test/fixtures/input.md
+format = -t html5
+Fatal error: Command failed: /bin/sh: pandoc: command not found
+```
+
+You will need TeX to be installed to generate pdfs. See the [Pandoc notes](http://johnmacfarlane.net/pandoc/README.html#creating-a-pdf) on this.
+
+If you do not have a recent unicode aware TeX or LaTeX installed you may need to update. Older installations are likely to generate when running test3:
+
+```
+Fatal error: Command failed: pandoc: Error producing PDF from TeX source.
+! LaTeX Error: File `ifluatex.sty' not found.
+```
+
 ### Code Style
 
 NB. Source is in LiveScript.
@@ -132,8 +150,10 @@ NB. Source is in LiveScript.
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
+_version-0.1.3_  Relaxed requirement for metadata heading to start with metadata delimiter.
+                 Documented missing Pandoc and TeX errors
 
-_version-0.1.1_  Corrected option docs and usage examples
+_version-0.1.2_  Corrected option docs and usage examples
 
 _version-0.1.1_  Clarify purpose in docs
 
