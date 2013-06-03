@@ -37,8 +37,10 @@ grunt.initConfig
 
 ### Options
 
-* __stripMeta:__ STRING.
-  Set to "---" by default.
+#### stripMeta
+Type: `String`
+Default: "---"
+
   If the input files contain metadata in the header, 
   this can be removed by setting here the separator string. 
   This separates the meatadata from the markdown content. 
@@ -46,23 +48,32 @@ grunt.initConfig
   The separator must start at the beginning of the line. 
   If no separator is seen at all, the whole content will be processed.
 
-* __infile:__ PATH (relative to Gruntfile).
-  Set to "tmp/inputs.md" by default 
-  The name of the temporary file used to accumulate multiple input files
-  that are being concatenated before sending them to pandoc
+#### infile
+Type: `String`
+Default: "tmp/inputs.md"
 
-* __pandocOptions:__ BOOLEAN.
-  Set to "--mathjax" by default
-  Can be used to pass any other options along to pandoc.
+The path of the temporary file used to accumulate multiple input files
+that are being concatenated before sending them to pandoc. Relative paths
+are relative to the GruntFile location.
 
-* __separator:__ STRING.
-  By default this is set to 2 OS independent line feeds.
+#### pandocOptions
+Type: `String`
+Default: "--mathjax"
 
-* __process:__ STRING.
-  Set to the empty by default. Default: empty string
-  This string will be prepended to the beginning of the concatenated output. 
-  It is processed using grunt.template.process, using the default options.
+Can be used to pass any other command line options along to pandoc.
 
+#### separator 
+Type: `String`
+Default: set to two OS independent line feeds.
+
+The separator to be inserted between input files that are concatenated before 
+processing by pandoc.
+
+#### process
+Type: `Boolean` `Object`
+Default: `false`
+
+Process source files as [templates](http://gruntjs.com/configuring-tasks#templates) before concatenating.
 
 ### Usage Examples
 ```coffee
@@ -71,7 +82,6 @@ grunt.initConfig
       test1:
         options:
           process: false
-          mathjax: true
         files:
           "tmp/test1.html": "test/fixtures/input.md"
 
@@ -123,7 +133,9 @@ NB. Source is in LiveScript.
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
----------------  -----------------------
-_version-0.1.0_  First release
+
+_version-0.1.1_  Corrected option docs and usage examples
+
 _version-0.1.1_  Clarify purpose in docs
----------------  -----------------------
+
+_version-0.1.0_  First release
