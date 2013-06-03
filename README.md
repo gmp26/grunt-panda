@@ -73,7 +73,18 @@ processing by pandoc.
 Type: `Boolean` `Object`
 Default: `false`
 
-Process source files as [templates](http://gruntjs.com/configuring-tasks#templates) before concatenating.
+Process source files as [templates][] before concatenating.
+
+* `false` - No processing will occur.
+* `true` - Process source files using [grunt.template.process][] defaults.
+* `options` object - Process source files using [grunt.template.process][], using the specified options.
+* `function(src, filepath)` - Process source files using the given function, called once for each file. The returned value will be used as source code.
+
+_(Default processing options are explained in the `grunt.template.process` documentation)_
+
+  [templates]: https://github.com/gruntjs/grunt/wiki/grunt.template
+  [grunt.template.process]: https://github.com/gruntjs/grunt/wiki/grunt.template#wiki-grunt-template-process
+
 
 ### Usage Examples
 ```coffee
@@ -150,6 +161,8 @@ NB. Source is in LiveScript.
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
+_version-0.1.4_  Revised process option description
+
 _version-0.1.3_  Relaxed requirement for metadata heading to start with metadata delimiter.
                  Documented missing Pandoc and TeX errors
 
