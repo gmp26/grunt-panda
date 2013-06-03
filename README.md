@@ -119,7 +119,6 @@ Process source files as [templates](http://gruntjs.com/configuring-tasks#templat
           ]
 
 ```
-Not yet defined.
 
 ### Error handling
 
