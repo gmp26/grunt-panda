@@ -123,6 +123,7 @@ NB. Source is in LiveScript.
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
----------------  -------------
+---------------  -----------------------
 _version-0.1.0_  First release
----------------  -------------
+_version-0.1.1_  Clarify purpose in docs
+---------------  -----------------------
