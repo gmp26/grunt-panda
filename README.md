@@ -1,12 +1,9 @@
 # grunt-panda
 
-> Compile markdown using [pandoc](http://johnmacfarlane.net/pandoc/) via the [jandoc](https://npmjs.org/package/jandoc) API
+> Convert documents (often to/from markdown) using [pandoc](http://johnmacfarlane.net/pandoc/)
 
 ## Getting Started
-This plugin requires Grunt `~0.4.1`, and Pandoc.
-
-The Jandoc node module calls pandoc using shell commands. I'd guess this will work on Windows provided
-pandoc is available in the grunt bash shell.
+This plugin requires Grunt `~0.4.1` and Pandoc.
 
 If you haven't used [Grunt](http://gruntjs.com/) before, be sure to check out the [Getting Started](http://gruntjs.com/getting-started) guide, as it explains how to create a [Gruntfile](http://gruntjs.com/sample-gruntfile) as well as install and use Grunt plugins. Once you're familiar with that process, you may install this plugin with this command:
 
@@ -34,7 +31,7 @@ grunt.initConfig
       # Specify src and dest files in the usual grunt manner.
       # Multiple input files (i.e. src files in an array) will be
       # concatenated with a blank line between each file before
-      # offering then as a single file to jandoc • pandoc.
+      # offering then as a single file to pandoc.
 
 ```
 
@@ -116,7 +113,7 @@ Not yet defined.
 
 ### Error handling
 
-To be improved. At the moment the task is likely to terminate if jandoc or pandoc fail.
+The task should fail reporting any errors encountered in pandoc.
 Use grunt -v for more detailed reporting.
 
 ### Code Style
@@ -126,4 +123,6 @@ NB. Source is in LiveScript.
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
-_(Nothing yet)_
+---------------  -------------
+_version-0.1.0_  First release
+---------------  -------------

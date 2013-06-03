@@ -14,7 +14,7 @@ module.exports = (grunt) ->
   
   # Please see the Grunt documentation for more information regarding task
   # creation: http://gruntjs.com/creating-tasks
-  grunt.registerMultiTask "panda", "Compile markdown using pandoc via jandoc.", ->
+  grunt.registerMultiTask "panda", "Convert documents using pandoc", ->
     
     done = @async!
 

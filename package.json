@@ -1,6 +1,6 @@
 {
   "name": "grunt-panda",
-  "description": "Compile markdown using pandoc",
+  "description": "Convert documents (often to/from markdown) using pandoc",
   "version": "0.1.0",
   "homepage": "https://github.com/gmp26/grunt-panda",
   "author": {
