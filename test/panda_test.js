@@ -33,6 +33,16 @@
       exists = grunt.file.exists("tmp/test5.docx");
       test.ok(exists, "it should create a docx");
       return test.done();
+    },
+    test4: function(test){
+      var exists, actual, expected;
+      test.expect(2);
+      exists = grunt.file.isDir("tmp/fixtures");
+      test.ok(exists, "it should create an output directory");
+      actual = grunt.file.read("tmp/fixtures/input.html");
+      expected = grunt.file.read("test/expected/fixtures/input.html");
+      test.equal(actual, expected, "it should create html for each input");
+      return test.done();
     }
   };
 }).call(this);

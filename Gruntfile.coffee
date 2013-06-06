@@ -71,6 +71,17 @@ module.exports = (grunt) ->
             "test/fixtures/input3.md"
           ]
 
+      test4:
+        options:
+          process: false
+
+        files: [
+          expand: true
+          cwd: "test"
+          src: "**/*.md"
+          dest: "tmp/"
+          ext: ".html"
+        ]
     
     # Unit tests.
     nodeunit:

@@ -56,3 +56,13 @@ exports.panda =
 
     test.done()
   
+  test4: (test) ->
+    test.expect 2
+    exists = grunt.file.isDir("tmp/fixtures")
+    test.ok(exists, "it should create an output directory")
+
+    actual = grunt.file.read("tmp/fixtures/input.html")
+    expected = grunt.file.read("test/expected/fixtures/input.html")
+    test.equal actual, expected, "it should create html for each input"
+
+    test.done()

@@ -8,6 +8,7 @@
 "use strict"
 
 async = require 'async'
+pathUtils = require 'path'
 cmdLine   = require('child_process').exec
 
 module.exports = (grunt) ->
@@ -16,6 +17,7 @@ module.exports = (grunt) ->
   # creation: http://gruntjs.com/creating-tasks
   grunt.registerMultiTask "panda", "Convert documents using pandoc", ->
     
+    # tell grunt this is an asynchronous task
     done = @async!
 
     # Merge task-specific and/or target-specific options with these defaults.
@@ -34,15 +36,28 @@ module.exports = (grunt) ->
 
     function iterator(f, callback)
 
-      input = concatenate f.src, options
+      fpaths = f.src.filter (path) ->
+        unless grunt.file.exists(path)
+          grunt.log.warn "Input file \"" + path + "\" not found."
+          false
+        else
+          true
+    
+      input = concatenate fpaths, options
 
       infile = options.infile
       outfile = f.dest
+      
+      grunt.log.writeln "making directory #{pathUtils.dirname(outfile)}"
+      grunt.file.mkdir pathUtils.dirname(outfile)
 
       format = if outfile.match /.html$/ then "-t html5" else ""
       format = options.format unless options.format == ""
 
       # write the source file
+      if fpaths.length == 1
+        grunt.log.writeln "writing #{fpaths.0} to #infile"
+
       grunt.file.write infile, input
 
       cmd = "pandoc -o #{outfile} #{format} #{options.pandocOptions} #{infile}"
@@ -53,15 +68,8 @@ module.exports = (grunt) ->
           grunt.fatal err
         callback(err)
 
-  function concatenate (paths, options)
+  function concatenate (fpaths, options)
    
-    fpaths = paths.filter (path) ->
-      unless grunt.file.exists(path)
-        grunt.log.warn "Input file \"" + path + "\" not found."
-        false
-      else
-        true
-    
     fpaths.map((path) ->
       grunt.log.writeln "Processing #{path}"
 
