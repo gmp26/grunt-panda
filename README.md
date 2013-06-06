@@ -177,6 +177,8 @@ NB. Source is in LiveScript.
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
+_version-0.1.5_  Now works with file globbing
+
 _version-0.1.4_  Revised process option description
 
 _version-0.1.3_  Relaxed requirement for metadata heading to start with metadata delimiter.
