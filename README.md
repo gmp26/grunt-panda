@@ -128,6 +128,22 @@ _(Default processing options are explained in the `grunt.template.process` docum
             "test/fixtures/input2.md"
             "test/fixtures/input3.md"
           ]
+```
+
+Whole directories of markdown files may be processed using grunts
+multi-file capability.
+```coffee
+      test4:
+        options:
+          process: false
+
+        files: [
+          expand: true
+          cwd: "test"
+          src: "**/*.md"
+          dest: "tmp/"
+          ext: ".html"
+        ]
 
 ```
 
