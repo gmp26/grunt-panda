@@ -1,7 +1,7 @@
 {
   "name": "grunt-panda",
   "description": "Convert documents (often to/from markdown) using pandoc",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "homepage": "https://github.com/gmp26/grunt-panda",
   "author": {
     "name": "Mike Pearson",
