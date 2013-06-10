@@ -20,6 +20,8 @@ grunt.loadNpmTasks 'grunt-panda'
 ## The "panda" task
 
 ### Overview
+Panda is a grunt multitask.
+
 In your project's Gruntfile, add a section named `panda` to the data object passed into `grunt.initConfig()`.
 
 ```coffee
@@ -31,7 +33,7 @@ grunt.initConfig
       # Specify src and dest files in the usual grunt manner.
       # Multiple input files (i.e. src files in an array) will be
       # concatenated with a blank line between each file before
-      # offering then as a single file to pandoc.
+      # offering them as a single stream to pandoc.
 
 ```
 
@@ -104,16 +106,13 @@ _(Default processing options are explained in the `grunt.template.process` docum
 
 ### Usage Examples
 ```coffee
-    panda:
-
       test1:
         options:
-         files:
-          "test/actual/test1.html": "test/fixtures/input.md"
+          process: true
+        files:
+          "test/actual/test1.html": "test/fixtures/test1.md"
 
       test2:
-        options:
-          pandocOptions: "--mathml"
         files:
           "test/actual/test2.html": [
             "test/fixtures/input1.md"
@@ -139,22 +138,22 @@ _(Default processing options are explained in the `grunt.template.process` docum
             "test/fixtures/input2.md"
             "test/fixtures/input3.md"
           ]
-
+```
 
 Whole directories of markdown files may be processed using grunt's
 multi-file capability.
 ```coffee
     panda
       test4:
-
+        options:
+          spawnLimit: 3
         files: [
           expand: true
           cwd: "test/fixtures/test4"
           src: "**/*.md"
           dest: "test/actual/test4"
           ext: ".html"
-        ]```
-
+        ]
 ```
 
 ### Error handling
@@ -182,7 +181,7 @@ Fatal error: Command failed: pandoc: Error producing PDF from TeX source.
 
 ### Code Style
 
-NB. Source is in LiveScript.
+NB. Source is in [LiveScript](http://livescript.net/).
 
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
