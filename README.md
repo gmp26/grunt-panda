@@ -77,7 +77,7 @@ if you find this helps with performance.
 #### stripMeta
 Type: `String`
 
-Default: "---"
+Default: "````"
 
   If the input files contain metadata in the header, 
   this can be removed by setting here the separator string. 
