@@ -37,19 +37,9 @@ grunt.initConfig
 
 ### Options
 
-#### stripMeta
-Type: `String`
-Default: "---"
-
-  If the input files contain metadata in the header, 
-  this can be removed by setting here the separator string. 
-  This separates the meatadata from the markdown content. 
-  The metadata and the separator will be ignored. 
-  The separator must start at the beginning of the line. 
-  If no separator is seen at all, the whole content will be processed.
-
 #### infile
 Type: `String`
+
 Default: "tmp/inputs.md"
 
 The path of the temporary file used to accumulate multiple input files
@@ -58,6 +48,7 @@ are relative to the GruntFile location.
 
 #### pandocOptions
 Type: `String`
+
 Default: 
 
 - for HTML: "-t html5 --section-divs --mathjax"
@@ -67,13 +58,35 @@ Can be used to pass any command line options along to pandoc.
 
 #### separator 
 Type: `String`
+
 Default: set to two OS independent line feeds.
 
 The separator to be inserted between input files that are concatenated before 
 processing by pandoc.
 
+#### spawnLimit
+Type: `Integer > 0`
+
+Default: 1
+
+Limits the number of pandoc child processes that can be spawned at any one time. Increase the number
+if you find this helps with performance.
+
+#### stripMeta
+Type: `String`
+
+Default: "---"
+
+  If the input files contain metadata in the header, 
+  this can be removed by setting here the separator string. 
+  This separates the meatadata from the markdown content. 
+  The metadata and the separator will be ignored. 
+  The separator must start at the beginning of the line. 
+  If no separator is seen at all, the whole content will be processed.
+
 #### process
 Type: `Boolean` `Object`
+
 Default: `false`
 
 Process source files as [templates][] before concatenating.
@@ -174,6 +187,16 @@ NB. Source is in LiveScript.
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
+_version-0.1.7_ 
+* Changed test1 so it tests lodash template processing 
+* Improved test4 to catch issue 2
+* Fixed silly asynchronous bug by piping data direct to pandoc rather than by using
+a temporary file.
+* Added spawnLimit option to control number of pandoc child processes.
+* Changed default options for markdown to html
+* Changed stripMeta default to 4 backticks. Backticks play better than dashes when source markdown is previewed without stripping. They are interpreted as a code block in both Github and Pandoc flavour markdown.
+* Moved async dependency from developer to user dependencies in package.json
+
 _version-0.1.6_  Tests use normalised pathnmames for Windows compatibility
 
 _version-0.1.5_  Now works with file globbing

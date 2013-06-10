@@ -15,10 +15,17 @@
         stripMeta: '````',
         separator: lflf,
         process: false,
-        infile: "tmp/inputs.md"
+        infile: "tmp/inputs.md",
+        spawnLimit: 1
       });
-      async.eachSeries(this.files, iterator, done);
+      grunt.verbose.writeln("spwanLimit = " + options.spawnLimit);
+      if (options.spawnLimit === 1) {
+        async.eachSeries(this.files, iterator, done);
+      } else {
+        async.eachLimit(this.files, options.spawnLimit, iterator, done);
+      }
       function iterator(f, callback){
+        debugger;
         var fpaths, input, infile, outfile, cmd, args, pandocOptions, child;
         fpaths = f.src.filter(function(path){
           if (!grunt.file.exists(path)) {
@@ -35,7 +42,7 @@
         grunt.file.mkdir(pathUtils.dirname(outfile));
         cmd = "pandoc";
         args = "";
-        pandocOptions = "-f markdown ";
+        pandocOptions = "-f markdown";
         if (outfile.match(/.html$/)) {
           if (options.pandocOptions == null) {
             pandocOptions = "-t html5 --section-divs --mathjax";
@@ -52,7 +59,7 @@
         child.stdout.on('data', function(data){
           return grunt.verbose.writeln('stdout: ' + data);
         });
-        return child.stdout.on('close', function(err){
+        return child.on('exit', function(err){
           grunt.verbose.writeln('pandoc exited with code ' + err);
           return callback(err);
         });

@@ -4,7 +4,7 @@
 # *
 # * Copyright (c) 2013 Mike Pearson
 # * Licensed under the MIT license.
-# 
+#
 "use strict"
 
 async = require 'async'
@@ -20,7 +20,7 @@ module.exports = (grunt) ->
   # Please see the Grunt documentation for more information regarding task
   # creation: http://gruntjs.com/creating-tasks
   grunt.registerMultiTask "panda", "Convert documents using pandoc", ->
-    
+
     # tell grunt this is an asynchronous task
     done = @async!
 
@@ -30,12 +30,20 @@ module.exports = (grunt) ->
       separator: lflf
       process: false
       infile: "tmp/inputs.md"
+      spawnLimit: 1
     })
 
+    grunt.verbose.writeln "spwanLimit = #{options.spawnLimit}"
+
     # Iterate over all specified file groups.
-    async.eachSeries @files, iterator, done
+    if options.spawnLimit == 1
+      async.eachSeries @files, iterator, done
+    else
+      async.eachLimit @files, options.spawnLimit, iterator, done
 
     function iterator(f, callback)
+
+      debugger
 
       fpaths = f.src.filter (path) ->
         unless grunt.file.exists(path)
@@ -43,31 +51,30 @@ module.exports = (grunt) ->
           false
         else
           true
-    
+
       input = concatenate fpaths, options
 
       infile = options.infile
       outfile = f.dest
-      
+
       grunt.verbose.writeln "making directory #{pathUtils.dirname(outfile)}"
       grunt.file.mkdir pathUtils.dirname(outfile)
 
       cmd = "pandoc"
       args = ""
-      pandocOptions = "-f markdown "
+      pandocOptions = "-f markdown"
 
-      if outfile.match /.html$/ 
+      if outfile.match /.html$/
         if !options.pandocOptions?
           pandocOptions = "-t html5 --section-divs --mathjax"
-      
+
       args = "-o #{outfile} #{pandocOptions}".split(" ")
 
       grunt.verbose.writeln "#cmd #{args.join ' '}"
 
       child = spawn cmd, args
       child.setEncoding = 'utf-8'
-      #child.stdout.pipe process.stdout
-      #child.stderr.pipe process.stderr
+
       grunt.verbose.writeln child.stdin.end input
 
       #grunt.verbose.writeln "write returns: #bufferStatus"
@@ -79,7 +86,7 @@ module.exports = (grunt) ->
       child.stdout.on 'data', (data) ->
         grunt.verbose.writeln 'stdout: ' + data
 
-      child.stdout.on 'close', (err) ->
+      child.on 'exit', (err) ->
         grunt.verbose.writeln 'pandoc exited with code ' + err
         callback err
       /*
@@ -103,14 +110,14 @@ module.exports = (grunt) ->
       */
 
   function concatenate (fpaths, options)
-   
+
     fpaths.map((path) ->
       grunt.verbose.writeln "Processing #{path}"
 
       src = grunt.file.read(path)
       if typeof options.process is "function"
         src = options.process(src, path)
-      else 
+      else
         src = grunt.template.process(src, options.process)  if options.process
 
       src = stripMeta(path, src, options.stripMeta) if options.stripMeta and options.stripMeta != ""

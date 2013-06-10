@@ -12,7 +12,7 @@
       test.expect(1);
       actual = grunt.file.read(path.normalize("test/actual/test1.html"));
       expected = grunt.file.read(path.normalize("test/expected/test1.html"));
-      test.equal(actual, expected, "markdown should compile to html");
+      test.equal(actual, expected, "lodash templates should be interpolated, then markdown should compile to html");
       return test.done();
     },
     test2: function(test){
@@ -42,13 +42,13 @@
       test.ok(exists, "it should create an output directory");
       actual = grunt.file.read(path.normalize("test/actual/test4/test4input1.html"));
       expected = grunt.file.read(path.normalize("test/expected/test4/test4input1.html"));
-      test.equal(actual, expected, "it should create html for each input");
+      test.equal(actual, expected, "it should create correct html for each input");
       actual = grunt.file.read(path.normalize("test/actual/test4/test4input2.html"));
       expected = grunt.file.read(path.normalize("test/expected/test4/test4input2.html"));
-      test.equal(actual, expected, "it should create html for each input");
+      test.equal(actual, expected, "it should create correct html for each input");
       actual = grunt.file.read(path.normalize("test/actual/test4/test4input3.html"));
       expected = grunt.file.read(path.normalize("test/expected/test4/test4input3.html"));
-      test.equal(actual, expected, "it should create html for each input");
+      test.equal(actual, expected, "it should create correct html for each input");
       return test.done();
     }
   };

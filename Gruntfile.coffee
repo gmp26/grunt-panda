@@ -3,10 +3,10 @@
 # *
 # * Copyright (c) 2013 Mike Pearson
 # * Licensed under the MIT license.
-# 
+#
 "use strict"
 module.exports = (grunt) ->
-  
+
   # Project configuration.
   grunt.initConfig
 
@@ -15,7 +15,7 @@ module.exports = (grunt) ->
       options:
         jshintrc: ".jshintrc"
 
-    
+
     # Before generating any new files, remove any previously-created files.
     clean:
       tests: ["test/actual/*"]
@@ -34,6 +34,8 @@ module.exports = (grunt) ->
     panda:
 
       test1:
+        options:
+          process: true
         files:
           "test/actual/test1.html": "test/fixtures/test1.md"
 
@@ -65,7 +67,8 @@ module.exports = (grunt) ->
           ]
 
       test4:
-
+        options:
+          spawnLimit: 3
         files: [
           expand: true
           cwd: "test/fixtures/test4"
@@ -98,7 +101,7 @@ module.exports = (grunt) ->
       #     dest: "actual/"
       #     ext: ".html"
       #   ]
-    
+
     # Unit tests.
     nodeunit:
       tests: ["test/*_test.js"]
@@ -109,17 +112,17 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks "grunt-contrib-nodeunit"
   grunt.loadNpmTasks "grunt-contrib-concat"
   grunt.loadNpmTasks "grunt-livescript"
-  
+
   # Compile the panda task and tests
   grunt.task.run "livescript"
 
   # Actually load this plugin's task(s).
   grunt.loadTasks "tasks"
-  
+
   # Whenever the "test" task is run, first clean the "actual" dir, then run this
   # plugin's task(s), then test the result.
   grunt.registerTask "test", ["clean", "panda", "nodeunit"]
-  
+
   # By default, lint and run all tests.
   grunt.registerTask "default", ["test"]
   #grunt.registerTask "default", ["jshint", "test"]
