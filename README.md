@@ -58,9 +58,12 @@ are relative to the GruntFile location.
 
 #### pandocOptions
 Type: `String`
-Default: "--mathjax"
+Default: 
 
-Can be used to pass any other command line options along to pandoc.
+- for HTML: "-t html5 --section-divs --mathjax"
+- else: ""
+
+Can be used to pass any command line options along to pandoc.
 
 #### separator 
 Type: `String`
@@ -92,58 +95,52 @@ _(Default processing options are explained in the `grunt.template.process` docum
 
       test1:
         options:
-          process: false
-        files:
-          "tmp/test1.html": "test/fixtures/input.md"
+         files:
+          "test/actual/test1.html": "test/fixtures/input.md"
 
       test2:
         options:
-          process: false
           pandocOptions: "--mathml"
         files:
-          "tmp/test2.html": [
+          "test/actual/test2.html": [
             "test/fixtures/input1.md"
             "test/fixtures/input2.md"
             "test/fixtures/input3.md"
           ]
 
       test3:
-        options:
-          process: false
- 
         files:
-          # Try not to mix output formats in one task like this
-          "tmp/test3.pdf": [
-            "test/fixtures/input1.md"
-            "test/fixtures/input2.md"
-            "test/fixtures/input3.md"
-          ]
-          "tmp/test4.html": [
-            "test/fixtures/input1.md"
-            "test/fixtures/input2.md"
-            "test/fixtures/input3.md"
-          ]
-          "tmp/test5.docx": [
-            "test/fixtures/input1.md"
-            "test/fixtures/input2.md"
-            "test/fixtures/input3.md"
-          ]
-```
 
-Whole directories of markdown files may be processed using grunts
+          "test/actual/test3.pdf": [
+            "test/fixtures/input1.md"
+            "test/fixtures/input2.md"
+            "test/fixtures/input3.md"
+          ]
+          "test/actual/test3.html": [
+            "test/fixtures/input1.md"
+            "test/fixtures/input2.md"
+            "test/fixtures/input3.md"
+          ]
+          "test/actual/test3.docx": [
+            "test/fixtures/input1.md"
+            "test/fixtures/input2.md"
+            "test/fixtures/input3.md"
+          ]
+
+
+Whole directories of markdown files may be processed using grunt's
 multi-file capability.
 ```coffee
+    panda
       test4:
-        options:
-          process: false
 
         files: [
           expand: true
-          cwd: "test"
+          cwd: "test/fixtures/test4"
           src: "**/*.md"
-          dest: "tmp/"
+          dest: "test/actual/test4"
           ext: ".html"
-        ]
+        ]```
 
 ```
 
@@ -177,6 +174,8 @@ NB. Source is in LiveScript.
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
+_version-0.1.6_  Tests use normalised pathnmames for Windows compatibility
+
 _version-0.1.5_  Now works with file globbing
 
 _version-0.1.4_  Revised process option description

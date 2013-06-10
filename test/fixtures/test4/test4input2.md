@@ -1,9 +1,8 @@
 ````
-title: Ignored metadata
-
+title: test4input2
 ````
 
-# input1
+# input2
 ## subtitle
 _emphasis_
 __bold__

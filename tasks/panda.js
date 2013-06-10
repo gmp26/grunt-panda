@@ -1,27 +1,28 @@
 (function(){
   "use strict";
-  var async, pathUtils, cmdLine;
+  var async, pathUtils, spawn;
   async = require('async');
   pathUtils = require('path');
-  cmdLine = require('child_process').exec;
+  spawn = require('child_process').spawn;
   module.exports = function(grunt){
+    var lf, lflf;
+    lf = grunt.util.linefeed;
+    lflf = lf + lf;
     grunt.registerMultiTask("panda", "Convert documents using pandoc", function(){
       var done, options;
       done = this.async();
       options = this.options({
-        stripMeta: "---",
-        separator: grunt.util.linefeed + grunt.util.linefeed,
+        stripMeta: '````',
+        separator: lflf,
         process: false,
-        infile: "tmp/inputs.md",
-        format: "",
-        pandocOptions: "--mathjax"
+        infile: "tmp/inputs.md"
       });
-      async.eachLimit(this.files, 3, iterator, done);
+      async.eachSeries(this.files, iterator, done);
       function iterator(f, callback){
-        var fpaths, input, infile, outfile, format, cmd;
+        var fpaths, input, infile, outfile, cmd, args, pandocOptions, child;
         fpaths = f.src.filter(function(path){
           if (!grunt.file.exists(path)) {
-            grunt.log.warn("Input file \"" + path + "\" not found.");
+            grunt.verbose.warn("Input file \"" + path + "\" not found.");
             return false;
           } else {
             return true;
@@ -30,22 +31,29 @@
         input = concatenate(fpaths, options);
         infile = options.infile;
         outfile = f.dest;
-        grunt.log.writeln("making directory " + pathUtils.dirname(outfile));
+        grunt.verbose.writeln("making directory " + pathUtils.dirname(outfile));
         grunt.file.mkdir(pathUtils.dirname(outfile));
-        format = outfile.match(/.html$/) ? "-t html5" : "";
-        if (options.format !== "") {
-          format = options.format;
-        }
-        if (fpaths.length === 1) {
-          grunt.log.writeln("writing " + fpaths[0] + " to " + infile);
-        }
-        grunt.file.write(infile, input);
-        cmd = "pandoc -o " + outfile + " " + format + " " + options.pandocOptions + " " + infile;
-        grunt.log.writeln("running: " + cmd);
-        return cmdLine(cmd, function(err, stdout){
-          if (err) {
-            grunt.fatal(err);
+        cmd = "pandoc";
+        args = "";
+        pandocOptions = "-f markdown ";
+        if (outfile.match(/.html$/)) {
+          if (options.pandocOptions == null) {
+            pandocOptions = "-t html5 --section-divs --mathjax";
           }
+        }
+        args = ("-o " + outfile + " " + pandocOptions).split(" ");
+        grunt.verbose.writeln(cmd + " " + args.join(' '));
+        child = spawn(cmd, args);
+        child.setEncoding = 'utf-8';
+        grunt.verbose.writeln(child.stdin.end(input));
+        child.stderr.on('data', function(data){
+          return grunt.verbose.writeln('stderr: ' + data);
+        });
+        child.stdout.on('data', function(data){
+          return grunt.verbose.writeln('stdout: ' + data);
+        });
+        return child.stdout.on('close', function(err){
+          grunt.verbose.writeln('pandoc exited with code ' + err);
           return callback(err);
         });
       }
@@ -54,7 +62,7 @@
     function concatenate(fpaths, options){
       return fpaths.map(function(path){
         var src;
-        grunt.log.writeln("Processing " + path);
+        grunt.verbose.writeln("Processing " + path);
         src = grunt.file.read(path);
         if (typeof options.process === "function") {
           src = options.process(src, path);
@@ -73,10 +81,10 @@
       eDelim = grunt.util.linefeed + delim + grunt.util.linefeed;
       endMeta = content.indexOf(eDelim);
       if (endMeta < 0) {
-        return content;
+        return lflf + content;
       } else {
         startContent = endMeta + eDelim.length;
-        return content.substr(startContent);
+        return lflf + content.substr(startContent);
       }
     }
     return stripMeta;

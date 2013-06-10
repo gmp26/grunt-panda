@@ -9,10 +9,14 @@
 
 async = require 'async'
 pathUtils = require 'path'
-cmdLine   = require('child_process').exec
+#cmdLine   = require('child_process').exec
+spawn     = require('child_process').spawn
 
 module.exports = (grunt) ->
-  
+  lf = grunt.util.linefeed
+  lflf = lf + lf
+
+
   # Please see the Grunt documentation for more information regarding task
   # creation: http://gruntjs.com/creating-tasks
   grunt.registerMultiTask "panda", "Convert documents using pandoc", ->
@@ -22,23 +26,20 @@ module.exports = (grunt) ->
 
     # Merge task-specific and/or target-specific options with these defaults.
     options = @options({
-      stripMeta: "---"
-      separator: grunt.util.linefeed + grunt.util.linefeed
+      stripMeta: '````'
+      separator: lflf
       process: false
       infile: "tmp/inputs.md"
-      format: ""
-      pandocOptions: "--mathjax"
     })
 
     # Iterate over all specified file groups.
-    # Spawn at most 3 child pandoc processes
-    async.eachLimit @files, 3, iterator, done
+    async.eachSeries @files, iterator, done
 
     function iterator(f, callback)
 
       fpaths = f.src.filter (path) ->
         unless grunt.file.exists(path)
-          grunt.log.warn "Input file \"" + path + "\" not found."
+          grunt.verbose.warn "Input file \"" + path + "\" not found."
           false
         else
           true
@@ -48,30 +49,63 @@ module.exports = (grunt) ->
       infile = options.infile
       outfile = f.dest
       
-      grunt.log.writeln "making directory #{pathUtils.dirname(outfile)}"
+      grunt.verbose.writeln "making directory #{pathUtils.dirname(outfile)}"
       grunt.file.mkdir pathUtils.dirname(outfile)
 
-      format = if outfile.match /.html$/ then "-t html5" else ""
-      format = options.format unless options.format == ""
+      cmd = "pandoc"
+      args = ""
+      pandocOptions = "-f markdown "
 
-      # write the source file
-      if fpaths.length == 1
-        grunt.log.writeln "writing #{fpaths.0} to #infile"
+      if outfile.match /.html$/ 
+        if !options.pandocOptions?
+          pandocOptions = "-t html5 --section-divs --mathjax"
+      
+      args = "-o #{outfile} #{pandocOptions}".split(" ")
 
-      grunt.file.write infile, input
+      grunt.verbose.writeln "#cmd #{args.join ' '}"
 
-      cmd = "pandoc -o #{outfile} #{format} #{options.pandocOptions} #{infile}"
-      grunt.log.writeln "running: #cmd"
+      child = spawn cmd, args
+      child.setEncoding = 'utf-8'
+      #child.stdout.pipe process.stdout
+      #child.stderr.pipe process.stderr
+      grunt.verbose.writeln child.stdin.end input
 
-      cmdLine cmd,  (err, stdout) ->
+      #grunt.verbose.writeln "write returns: #bufferStatus"
+
+
+      child.stderr.on 'data', (data) ->
+        grunt.verbose.writeln 'stderr: ' + data
+
+      child.stdout.on 'data', (data) ->
+        grunt.verbose.writeln 'stdout: ' + data
+
+      child.stdout.on 'close', (err) ->
+        grunt.verbose.writeln 'pandoc exited with code ' + err
+        callback err
+      /*
+      if args == ""
+
+        # write the source file
+        grunt.verbose.writeln "using intermediate #infile"
+
+        grunt.file.write infile, input
+
+        cmd = "pandoc -o #{outfile} #{pandocOptions} #{infile}"
+
+        grunt.verbose.writeln "running: #cmd"
+      */
+
+      /*
+      cmdLine cmd, (err, stdout) ->
         if err
           grunt.fatal err
         callback(err)
+      */
 
   function concatenate (fpaths, options)
    
     fpaths.map((path) ->
-      grunt.log.writeln "Processing #{path}"
+      grunt.verbose.writeln "Processing #{path}"
 
       src = grunt.file.read(path)
       if typeof options.process is "function"
@@ -79,17 +113,17 @@ module.exports = (grunt) ->
       else 
         src = grunt.template.process(src, options.process)  if options.process
 
-      src = stripMeta(path, src, options.stripMeta)  if options.stripMeta and options.stripMeta != ""
+      src = stripMeta(path, src, options.stripMeta) if options.stripMeta and options.stripMeta != ""
     ).join(options.separator)
 
   function stripMeta (path, content, delim)
-    # grunt.log.writeln("STRIP #{delim} from #{path}")
+    # grunt.verbose.writeln("STRIP #{delim} from #{path}")
 
     eDelim = grunt.util.linefeed + delim + grunt.util.linefeed
     endMeta = content.indexOf eDelim
     if endMeta < 0
-      return content
+      return lflf + content
     else
       startContent = endMeta + eDelim.length
-      return content.substr startContent
+      return lflf + content.substr startContent
 

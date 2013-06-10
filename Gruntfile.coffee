@@ -1,4 +1,3 @@
-#
 # * grunt-panda
 # * https://github.com/gmp26/grunt-panda
 # *
@@ -19,7 +18,7 @@ module.exports = (grunt) ->
     
     # Before generating any new files, remove any previously-created files.
     clean:
-      tests: ["tmp/*"]
+      tests: ["test/actual/*"]
 
     # Compile coffee
     livescript:
@@ -35,53 +34,70 @@ module.exports = (grunt) ->
     panda:
 
       test1:
-        options:
-          process: false
-         files:
-          "tmp/test1.html": "test/fixtures/input.md"
+        files:
+          "test/actual/test1.html": "test/fixtures/test1.md"
 
       test2:
-        options:
-          process: false
-          pandocOptions: "--mathml"
         files:
-          "tmp/test2.html": [
+          "test/actual/test2.html": [
             "test/fixtures/input1.md"
             "test/fixtures/input2.md"
             "test/fixtures/input3.md"
           ]
 
       test3:
-        options:
-          process: false
         files:
-          "tmp/test3.pdf": [
+
+          "test/actual/test3.pdf": [
             "test/fixtures/input1.md"
             "test/fixtures/input2.md"
             "test/fixtures/input3.md"
           ]
-          "tmp/test4.html": [
+          "test/actual/test3.html": [
             "test/fixtures/input1.md"
             "test/fixtures/input2.md"
             "test/fixtures/input3.md"
           ]
-          "tmp/test5.docx": [
+          "test/actual/test3.docx": [
             "test/fixtures/input1.md"
             "test/fixtures/input2.md"
             "test/fixtures/input3.md"
           ]
 
       test4:
-        options:
-          process: false
 
         files: [
           expand: true
-          cwd: "test"
+          cwd: "test/fixtures/test4"
           src: "**/*.md"
-          dest: "tmp/"
+          dest: "test/actual/test4"
           ext: ".html"
         ]
+
+      # test5:
+      #   options:
+      #     stripMeta: '````'
+
+      #   files: [
+      #     expand: true
+      #     cwd: "test"
+      #     src: "**/pi.md"
+      #     dest: "actual/"
+      #     ext: ".html"
+      #   ]
+
+      # test6:
+      #   options:
+      #     stripMeta: '````'
+      #     metaDataFile: "meta.yaml"
+
+      #   files: [
+      #     expand: true
+      #     cwd: "test"
+      #     src: "**/*.md"
+      #     dest: "actual/"
+      #     ext: ".html"
+      #   ]
     
     # Unit tests.
     nodeunit:
@@ -100,7 +116,7 @@ module.exports = (grunt) ->
   # Actually load this plugin's task(s).
   grunt.loadTasks "tasks"
   
-  # Whenever the "test" task is run, first clean the "tmp" dir, then run this
+  # Whenever the "test" task is run, first clean the "actual" dir, then run this
   # plugin's task(s), then test the result.
   grunt.registerTask "test", ["clean", "panda", "nodeunit"]
   

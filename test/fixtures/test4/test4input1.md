@@ -1,6 +1,5 @@
 ````
-title: Ignored metadata
-
+title: test4input1
 ````
 
 # input1
