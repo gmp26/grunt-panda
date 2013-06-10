@@ -72,7 +72,7 @@ Type: `Integer > 0`
 Default: 1
 
 Limits the number of pandoc child processes that can be spawned at any one time. Increase the number
-if you find this helps with performance.
+if you find this helps with performance and if you are not concatenating files into one destination. If you are concatenating markdown, the order is likely to matter and can only be guaranteed when the spawnLimit is 1.
 
 #### stripMeta
 Type: `String`
@@ -186,6 +186,9 @@ NB. Source is in [LiveScript](http://livescript.net/).
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
+_version-0.1.8_
+* Added ability to extract metadata to yaml
+
 _version-0.1.7_ 
 * Changed test1 so it tests lodash template processing 
 * Improved test4 to catch issue 2
@@ -196,17 +199,24 @@ a temporary file.
 * Changed stripMeta default to 4 backticks. Backticks play better than dashes when source markdown is previewed without stripping. They are interpreted as a code block in both Github and Pandoc flavour markdown.
 * Moved async dependency from developer to user dependencies in package.json
 
-_version-0.1.6_  Tests use normalised pathnmames for Windows compatibility
+_version-0.1.6_ 
+* Tests use normalised pathnmames for Windows compatibility
 
-_version-0.1.5_  Now works with file globbing
+_version-0.1.5_ 
+* Now works with file globbing
 
-_version-0.1.4_  Revised process option description
+_version-0.1.4_ 
+* Revised process option description
 
-_version-0.1.3_  Relaxed requirement for metadata heading to start with metadata delimiter.
-                 Documented missing Pandoc and TeX errors
+_version-0.1.3_ 
+* Relaxed requirement for metadata heading to start with metadata delimiter.
+* Documented missing Pandoc and TeX errors
 
-_version-0.1.2_  Corrected option docs and usage examples
+_version-0.1.2_ 
+* Corrected option docs and usage examples
 
-_version-0.1.1_  Clarify purpose in docs
+_version-0.1.1_ 
+* Clarify purpose in docs
 
-_version-0.1.0_  First release
+_version-0.1.0_ 
+* First release

@@ -73,3 +73,12 @@ exports.panda =
     test.equal actual, expected, "it should create correct html for each input"
 
     test.done()
+
+
+  test5: (test) ->
+    test.expect 1
+    exists = grunt.file.isDir path.normalize "test/actual/test5/meta.yaml"
+    test.ok(exists, "it should create yaml output")
+
+    test.done()
+

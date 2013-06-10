@@ -25,7 +25,6 @@
         async.eachLimit(this.files, options.spawnLimit, iterator, done);
       }
       function iterator(f, callback){
-        debugger;
         var fpaths, input, infile, outfile, cmd, args, pandocOptions, child;
         fpaths = f.src.filter(function(path){
           if (!grunt.file.exists(path)) {
@@ -85,6 +84,7 @@
     }
     function stripMeta(path, content, delim){
       var eDelim, endMeta, startContent;
+      grunt.verbose.writeln("STRIP " + delim + " from " + path);
       eDelim = grunt.util.linefeed + delim + grunt.util.linefeed;
       endMeta = content.indexOf(eDelim);
       if (endMeta < 0) {

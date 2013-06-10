@@ -50,6 +50,13 @@
       expected = grunt.file.read(path.normalize("test/expected/test4/test4input3.html"));
       test.equal(actual, expected, "it should create correct html for each input");
       return test.done();
+    },
+    test5: function(test){
+      var exists;
+      test.expect(1);
+      exists = grunt.file.isDir(path.normalize("test/actual/test5/meta.yaml"));
+      test.ok(exists, "it should create yaml output");
+      return test.done();
     }
   };
 }).call(this);

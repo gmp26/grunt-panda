@@ -43,8 +43,6 @@ module.exports = (grunt) ->
 
     function iterator(f, callback)
 
-      debugger
-
       fpaths = f.src.filter (path) ->
         unless grunt.file.exists(path)
           grunt.verbose.warn "Input file \"" + path + "\" not found."
@@ -89,25 +87,6 @@ module.exports = (grunt) ->
       child.on 'exit', (err) ->
         grunt.verbose.writeln 'pandoc exited with code ' + err
         callback err
-      /*
-      if args == ""
-
-        # write the source file
-        grunt.verbose.writeln "using intermediate #infile"
-
-        grunt.file.write infile, input
-
-        cmd = "pandoc -o #{outfile} #{pandocOptions} #{infile}"
-
-        grunt.verbose.writeln "running: #cmd"
-      */
-
-      /*
-      cmdLine cmd, (err, stdout) ->
-        if err
-          grunt.fatal err
-        callback(err)
-      */
 
   function concatenate (fpaths, options)
 
@@ -124,7 +103,7 @@ module.exports = (grunt) ->
     ).join(options.separator)
 
   function stripMeta (path, content, delim)
-    # grunt.verbose.writeln("STRIP #{delim} from #{path}")
+    grunt.verbose.writeln("STRIP #{delim} from #{path}")
 
     eDelim = grunt.util.linefeed + delim + grunt.util.linefeed
     endMeta = content.indexOf eDelim
