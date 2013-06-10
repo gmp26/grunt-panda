@@ -16,7 +16,8 @@
         separator: lflf,
         process: false,
         infile: "tmp/inputs.md",
-        spawnLimit: 1
+        spawnLimit: 1,
+        metaDataPath: "metadata.yaml"
       });
       grunt.verbose.writeln("spwanLimit = " + options.spawnLimit);
       if (options.spawnLimit === 1) {
@@ -41,12 +42,16 @@
         grunt.file.mkdir(pathUtils.dirname(outfile));
         cmd = "pandoc";
         args = "";
-        pandocOptions = "-f markdown";
-        if (outfile.match(/.html$/)) {
-          if (options.pandocOptions == null) {
-            pandocOptions = "-t html5 --section-divs --mathjax";
-          }
+        if (options.pandocOptions == null) {
+          pandocOptions = outfile.match(/.html$/) ? "-t html5 --section-divs --mathjax" : "-f markdown";
+        } else {
+          pandocOptions = options.pandocOptions;
         }
+        /*
+        if outfile.match /.html$/
+          if !options.pandocOptions?
+            pandocOptions = "-t html5 --section-divs --mathjax"
+        */
         args = ("-o " + outfile + " " + pandocOptions).split(" ");
         grunt.verbose.writeln(cmd + " " + args.join(' '));
         child = spawn(cmd, args);
@@ -66,8 +71,10 @@
       return iterator;
     });
     function concatenate(fpaths, options){
+      var metaDataPath;
+      metaDataPath = options.metaDataPath;
       return fpaths.map(function(path){
-        var src;
+        var src, ref$, yaml;
         grunt.verbose.writeln("Processing " + path);
         src = grunt.file.read(path);
         if (typeof options.process === "function") {
@@ -78,8 +85,10 @@
           }
         }
         if (options.stripMeta && options.stripMeta !== "") {
-          return src = stripMeta(path, src, options.stripMeta);
+          ref$ = stripMeta(path, src, options.stripMeta), yaml = ref$.yaml, src = ref$.md;
         }
+        grunt.verbose.writeln("path=" + path + "; yaml = " + yaml);
+        return src;
       }).join(options.separator);
     }
     function stripMeta(path, content, delim){
@@ -88,10 +97,16 @@
       eDelim = grunt.util.linefeed + delim + grunt.util.linefeed;
       endMeta = content.indexOf(eDelim);
       if (endMeta < 0) {
-        return lflf + content;
+        return {
+          yaml: "123",
+          md: lflf + content
+        };
       } else {
         startContent = endMeta + eDelim.length;
-        return lflf + content.substr(startContent);
+        return {
+          yaml: "456",
+          md: lflf + content.substr(startContent)
+        };
       }
     }
     return stripMeta;
