@@ -18,6 +18,55 @@ module.exports = (grunt) ->
   lflf = lf + lf
   yamlre = /^````$\n^([^`]*)````/m
 
+  #
+  # Wrap a simple object with some accessor functions so we
+  # have somewhere to hang different storage and access mechanisms.
+  #
+  # examples:
+  #   metadata = makeStore()
+  #   metadata.setPathData 'foo/bar/index', yamlData
+  #
+
+  makeStore =  ->
+
+    root = {}
+    store = -> # make it a function in case it's useful to call it ()
+    store.root = (data) ->
+      return root unless data?
+      if typeof data != 'object'
+        throw new Error 'store root must be object'
+      root := data
+      return store
+
+    store.setPathData = (path, data) ->
+
+      accPaths = (names, data, acc) ->
+
+        #console.log "names = #names, acc=#acc"
+
+        if names.length == 0
+          throw new Error "empty list"
+
+        if names.length == 1
+          acc[names.0] = data
+        else
+          [head, ...tail] = names
+          acc[head] = {} unless acc[head]? || typeof acc[head] == 'object'
+          accPaths tail, data, acc[head]
+
+      pathToObj = (names, data, obj) ->
+        if typeof data != 'object'
+          console.log "data = "+data
+          throw new Error 'data must be object'
+        names = names.filter (name)->name && name.length > 0
+        console.log "names = #names"
+        accPaths names, data, obj
+
+      pathToObj (path.split '/'), data, root
+      return store
+
+    return store
+
   # Please see the Grunt documentation for more information regarding task
   # creation: http://gruntjs.com/creating-tasks
   grunt.registerMultiTask "panda", "Convert documents using pandoc", ->
@@ -25,6 +74,7 @@ module.exports = (grunt) ->
     # tell grunt this is an asynchronous task
     done = @async!
 
+    metadata = makeStore()
     yamlObj = {}
 
     # Merge task-specific and/or target-specific options with these defaults.
@@ -45,8 +95,8 @@ module.exports = (grunt) ->
     else
       async.eachLimit @files, options.spawnLimit, iterator, writeYAML
 
-    function writeYAML 
-      grunt.file.write options.metaDataPath, jsy.safeDump yamlObj
+    function writeYAML
+      grunt.file.write options.metaDataPath, jsy.safeDump metadata.root!
       done!
 
     function iterator(f, callback)
@@ -90,7 +140,7 @@ module.exports = (grunt) ->
         grunt.verbose.writeln 'stdout: ' + data
 
       child.on 'exit', (err) ->
-        if err 
+        if err
           grunt.verbose.writeln 'pandoc exited with code ' + err
         callback err
 
@@ -118,6 +168,9 @@ module.exports = (grunt) ->
         dirname = pathUtils.dirname p
         pathname = (dirname + "/" + basename)
         debugger
+
+        metadata.setPathData path, {meta: yaml}
+
         yamlObj[path] = jsy.safeLoad yaml
 
 
@@ -138,4 +191,5 @@ module.exports = (grunt) ->
         md = lflf + content
 
       return {yaml:yaml, md:md}
+
 
