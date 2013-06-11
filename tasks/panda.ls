@@ -9,13 +9,14 @@
 
 async = require 'async'
 pathUtils = require 'path'
-#cmdLine   = require('child_process').exec
-spawn     = require('child_process').spawn
+#cmdLine = require('child_process').exec
+spawn = require('child_process').spawn
+jsy = require('js-yaml')
 
 module.exports = (grunt) ->
   lf = grunt.util.linefeed
   lflf = lf + lf
-
+  yamlre = /^````$\n^([^`]*)````/m
 
   # Please see the Grunt documentation for more information regarding task
   # creation: http://gruntjs.com/creating-tasks
@@ -23,6 +24,8 @@ module.exports = (grunt) ->
 
     # tell grunt this is an asynchronous task
     done = @async!
+
+    yamlObj = {}
 
     # Merge task-specific and/or target-specific options with these defaults.
     options = @options({
@@ -38,9 +41,13 @@ module.exports = (grunt) ->
 
     # Iterate over all specified file groups.
     if options.spawnLimit == 1
-      async.eachSeries @files, iterator, done
+      async.eachSeries @files, iterator, writeYAML
     else
-      async.eachLimit @files, options.spawnLimit, iterator, done
+      async.eachLimit @files, options.spawnLimit, iterator, writeYAML
+
+    function writeYAML 
+      grunt.file.write options.metaDataPath, jsy.safeDump yamlObj
+      done!
 
     function iterator(f, callback)
 
@@ -67,12 +74,6 @@ module.exports = (grunt) ->
       else
         pandocOptions = options.pandocOptions
 
-      /*
-      if outfile.match /.html$/
-        if !options.pandocOptions?
-          pandocOptions = "-t html5 --section-divs --mathjax"
-      */
-
       args = "-o #{outfile} #{pandocOptions}".split(" ")
 
       grunt.verbose.writeln "#cmd #{args.join ' '}"
@@ -89,37 +90,52 @@ module.exports = (grunt) ->
         grunt.verbose.writeln 'stdout: ' + data
 
       child.on 'exit', (err) ->
-        grunt.verbose.writeln 'pandoc exited with code ' + err
+        if err 
+          grunt.verbose.writeln 'pandoc exited with code ' + err
         callback err
 
-  function concatenate (fpaths, options)
+    function concatenate (fpaths, options)
 
-    metaDataPath = options.metaDataPath
+      metaDataPath = options.metaDataPath
 
-    fpaths.map((path) ->
-      grunt.verbose.writeln "Processing #{path}"
+      fpaths.map((path) ->
+        grunt.verbose.writeln "Processing #{path}"
 
-      src = grunt.file.read(path)
-      if typeof options.process is "function"
-        src = options.process(src, path)
+        src = grunt.file.read(path)
+        if typeof options.process is "function"
+          src = options.process(src, path)
+        else
+          src = grunt.template.process(src, options.process)  if options.process
+
+        {yaml:yaml, md:src} = stripMeta(path, src, options.stripMeta) if options.stripMeta and options.stripMeta != ""
+
+        grunt.verbose.writeln "path=#path; yaml = #yaml"
+        #grunt.verbose.writeln "md = #src"
+
+        #create object reference from the path
+        p = pathUtils.normalize path
+        basename = pathUtils.basename p, '.md'
+        dirname = pathUtils.dirname p
+        pathname = (dirname + "/" + basename)
+        debugger
+        yamlObj[path] = jsy.safeLoad yaml
+
+
+        return src
+      ).join(options.separator)
+
+    function stripMeta (path, content, delim)
+      #grunt.verbose.writeln("STRIP #{delim} from #{path}")
+      #grunt.verbose.writeln("content =  #{content}")
+
+      matches = content.match yamlre
+
+      if(matches)
+        yaml = matches[1]
+        md = lf + content.substr matches[0].length
       else
-        src = grunt.template.process(src, options.process)  if options.process
+        yaml = ""
+        md = lflf + content
 
-      {yaml:yaml, md:src} = stripMeta(path, src, options.stripMeta) if options.stripMeta and options.stripMeta != ""
-
-      grunt.verbose.writeln "path=#path; yaml = #yaml"
-
-      return src
-    ).join(options.separator)
-
-  function stripMeta (path, content, delim)
-    grunt.verbose.writeln("STRIP #{delim} from #{path}")
-
-    eDelim = grunt.util.linefeed + delim + grunt.util.linefeed
-    endMeta = content.indexOf eDelim
-    if endMeta < 0
-      return {yaml:"123", md: lflf + content}
-    else
-      startContent = endMeta + eDelim.length
-      return {yaml:"456", md: lflf + content.substr startContent}
+      return {yaml:yaml, md:md}
 

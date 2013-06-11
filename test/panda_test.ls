@@ -77,7 +77,7 @@ exports.panda =
 
   test5: (test) ->
     test.expect 1
-    exists = grunt.file.isDir path.normalize "test/actual/test5/meta.yaml"
+    exists = grunt.file.exists path.normalize "test/actual/test5/meta.yaml"
     test.ok(exists, "it should create yaml output")
 
     test.done()
