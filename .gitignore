@@ -3,3 +3,4 @@ npm-debug.log
 test/actual/*
 tmp/*
 lf
+*.yaml

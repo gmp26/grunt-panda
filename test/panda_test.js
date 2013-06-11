@@ -52,10 +52,23 @@
       return test.done();
     },
     test5: function(test){
-      var exists;
-      test.expect(1);
+      var exists, actual, expected;
+      test.expect(2);
       exists = grunt.file.exists(path.normalize("test/actual/test5/meta.yaml"));
       test.ok(exists, "it should create yaml output");
+      actual = grunt.file.read(path.normalize("test/actual/test5/meta.yaml"));
+      expected = grunt.file.read(path.normalize("test/expected/test5/meta.yaml"));
+      test.equal(actual, expected, "yaml should match expectation");
+      return test.done();
+    },
+    test6: function(test){
+      var exists, actual, expected;
+      test.expect(2);
+      exists = grunt.file.exists(path.normalize("test/actual/test6/meta.yaml"));
+      test.ok(exists, "metadata yaml should be merged");
+      actual = grunt.file.read(path.normalize("test/actual/test6/meta.yaml"));
+      expected = grunt.file.read(path.normalize("test/expected/test6/meta.yaml"));
+      test.equal(actual, expected, "merged yaml should match expectation");
       return test.done();
     }
   };

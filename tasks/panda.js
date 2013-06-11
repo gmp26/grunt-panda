@@ -1,74 +1,26 @@
 (function(){
   "use strict";
-  var async, pathUtils, spawn, jsy, slice$ = [].slice;
+  var async, pathUtils, spawn, jsy, makeStore;
   async = require('async');
   pathUtils = require('path');
   spawn = require('child_process').spawn;
   jsy = require('js-yaml');
+  makeStore = require('../lib/store.js');
   module.exports = function(grunt){
-    var lf, lflf, yamlre, makeStore;
+    var lf, lflf, yamlre;
     lf = grunt.util.linefeed;
     lflf = lf + lf;
     yamlre = /^````$\n^([^`]*)````/m;
-    makeStore = function(){
-      var root, store;
-      root = {};
-      store = function(){};
-      store.root = function(data){
-        if (data == null) {
-          return root;
-        }
-        if (typeof data !== 'object') {
-          throw new Error('store root must be object');
-        }
-        root = data;
-        return store;
-      };
-      store.setPathData = function(path, data){
-        var accPaths, pathToObj;
-        accPaths = function(names, data, acc){
-          var head, tail;
-          if (names.length === 0) {
-            throw new Error("empty list");
-          }
-          if (names.length === 1) {
-            return acc[names[0]] = data;
-          } else {
-            head = names[0], tail = slice$.call(names, 1);
-            if (!(acc[head] != null || typeof acc[head] === 'object')) {
-              acc[head] = {};
-            }
-            return accPaths(tail, data, acc[head]);
-          }
-        };
-        pathToObj = function(names, data, obj){
-          if (typeof data !== 'object') {
-            console.log("data = " + data);
-            throw new Error('data must be object');
-          }
-          names = names.filter(function(name){
-            return name && name.length > 0;
-          });
-          console.log("names = " + names);
-          return accPaths(names, data, obj);
-        };
-        pathToObj(path.split('/'), data, root);
-        return store;
-      };
-      return store;
-    };
     return grunt.registerMultiTask("panda", "Convert documents using pandoc", function(){
-      var done, metadata, yamlObj, options;
+      var done, meta, options;
       done = this.async();
-      metadata = makeStore();
-      yamlObj = {};
+      meta = makeStore(grunt);
       options = this.options({
         stripMeta: '````',
         separator: lflf,
         process: false,
         infile: "tmp/inputs.md",
-        spawnLimit: 1,
-        metaDataPath: "metadata.yaml"
+        spawnLimit: 1
       });
       grunt.verbose.writeln("spwanLimit = " + options.spawnLimit);
       if (options.spawnLimit === 1) {
@@ -77,7 +29,9 @@
         async.eachLimit(this.files, options.spawnLimit, iterator, writeYAML);
       }
       function writeYAML(){
-        grunt.file.write(options.metaDataPath, jsy.safeDump(metadata.root()));
+        if (options.metaDataPath != null) {
+          grunt.file.write(options.metaDataPath, jsy.safeDump(meta.root()));
+        }
         return done();
       }
       function iterator(f, callback){
@@ -121,10 +75,8 @@
         });
       }
       function concatenate(fpaths, options){
-        var metaDataPath;
-        metaDataPath = options.metaDataPath;
         return fpaths.map(function(path){
-          var src, ref$, yaml, p, basename, dirname, pathname;
+          var src, ref$, yaml, p, basename, dirname, metadata, pathname;
           grunt.verbose.writeln("Processing " + path);
           src = grunt.file.read(path);
           if (typeof options.process === "function") {
@@ -137,16 +89,16 @@
           if (options.stripMeta && options.stripMeta !== "") {
             ref$ = stripMeta(path, src, options.stripMeta), yaml = ref$.yaml, src = ref$.md;
           }
-          grunt.verbose.writeln("path=" + path + "; yaml = " + yaml);
-          p = pathUtils.normalize(path);
-          basename = pathUtils.basename(p, '.md');
-          dirname = pathUtils.dirname(p);
-          pathname = dirname + "/" + basename;
-          debugger;
-          metadata.setPathData(path, {
-            meta: yaml
-          });
-          yamlObj[path] = jsy.safeLoad(yaml);
+          if (options.metaDataPath != null && yaml.length > 0) {
+            grunt.log.debug("path=" + path + "; yaml = " + yaml);
+            p = pathUtils.normalize(path);
+            basename = pathUtils.basename(p, '.md');
+            dirname = pathUtils.dirname(p);
+            metadata = {};
+            metadata.meta = jsy.safeLoad(yaml);
+            pathname = dirname + "/" + basename;
+            meta.setPathData(pathname, metadata);
+          }
           return src;
         }).join(options.separator);
       }
@@ -154,9 +106,11 @@
         var matches, yaml, md;
         matches = content.match(yamlre);
         if (matches) {
+          grunt.log.debug(path + " has metadata");
           yaml = matches[1];
           md = lf + content.substr(matches[0].length);
         } else {
+          grunt.log.debug(path + " has no metadata");
           yaml = "";
           md = lflf + content;
         }

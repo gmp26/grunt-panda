@@ -27,6 +27,7 @@ module.exports = (grunt) ->
           bare: false
           prelude: true
         files:
+          'lib/store.js': 'lib/store.ls'
           'tasks/panda.js': 'tasks/panda.ls'
           'test/panda_test.js': 'test/panda_test.ls'
 
@@ -86,6 +87,19 @@ module.exports = (grunt) ->
           expand: true
           cwd: "test/fixtures"
           src: "**/test5.md"
+          dest: "test/actual"
+          ext: ".html"
+        ]
+
+      test6:
+        options:
+          stripMeta: '````'
+          metaDataPath: "test/actual/test6/meta.yaml"
+
+        files: [
+          expand: true
+          cwd: "test/fixtures"
+          src: ["**/test4/*.md", "**/test5.md"]
           dest: "test/actual"
           ext: ".html"
         ]
