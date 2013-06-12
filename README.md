@@ -214,9 +214,11 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+_version-0.1.10_
+* Removed --section-divs option as it does not play well with raw html. The html nesting ends up broken.
+
 _version-0.1.9_
 * Default pandoc options now include -S for typographically correct output.
-* Removed --section-divs option as it does not play well with raw html. The html nesting ends up broken.
 
 _version-0.1.8_
 * Added ability to extract and merge metadata to yaml file(s).
