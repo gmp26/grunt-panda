@@ -1,0 +1,12 @@
+test: 
+  fixtures: 
+    test4: 
+      test4input1: 
+        meta: 
+          title: test4input1
+      test4input2: 
+        meta: 
+          title: test4input2
+      test4input3: 
+        meta: 
+          title: test4input3

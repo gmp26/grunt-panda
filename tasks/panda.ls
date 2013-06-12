@@ -70,7 +70,7 @@ module.exports = (grunt) ->
       args = ""
 
       if !options.pandocOptions?
-        pandocOptions = if outfile.match /.html$/ then "-t html5 --smart --section-divs --mathjax" else "-f markdown --smart"
+        pandocOptions = if outfile.match /.html$/ then "-t html5 --smart --mathjax" else "-f markdown --smart"
       else
         pandocOptions = options.pandocOptions
 
