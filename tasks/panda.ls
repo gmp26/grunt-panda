@@ -9,7 +9,6 @@
 
 async = require 'async'
 pathUtils = require 'path'
-#cmdLine = require('child_process').exec
 spawn = require('child_process').spawn
 jsy = require('js-yaml')
 makeStore = require('../lib/store.js')

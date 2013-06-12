@@ -7,11 +7,14 @@ module.exports = (grunt) ->
   # have somewhere to hang different storage and access mechanisms.
   #
   # example:
+  #   makeStore = require('lib/store.js')
   #   meta = makeStore()
   #   meta.setPathData 'foo/bar/index', yamlData
   #
   root = {}
-  store = -> # make it a function in case it's useful to call it ()
+
+  store = -> # we might make this function persist the data?
+
   store.root = (data) ->
     return root unless data?
     if typeof data != 'object'
@@ -29,7 +32,7 @@ module.exports = (grunt) ->
       grunt.log.debug "accPaths: names = #names"
 
       if names.length == 0
-        throw new Error "empty list"
+        grunt.fatal "empty store path"
 
       if names.length == 1
         acc[names.0] = data
@@ -40,7 +43,7 @@ module.exports = (grunt) ->
 
     pathToObj = (names, data, obj) ->
       if typeof data != 'object'
-        grunt.warn "data is not an object: #data"
+        grunt.fatal "data is not an object: #data"
       names = names.filter (name)->name && name.length > 0
       grunt.log.debug "names = #names"
       accPaths names, data, obj

@@ -142,6 +142,7 @@ _(Default processing options are explained in the `grunt.template.process` docum
 
 Whole directories of markdown files may be processed using grunt's
 multi-file capability.
+
 ```coffee
     panda
       test4:
@@ -156,6 +157,32 @@ multi-file capability.
         ]
 ```
 
+If metaDataPath is defined, any Yaml metadata stripped from file headers can be merged into a single file.
+
+```coffee
+    panda
+      test6:
+        options:
+          stripMeta: '````'
+          metaDataPath: "test/actual/test6/meta.yaml"
+        files: [
+          expand: true
+          cwd: "test/fixtures"
+          src: ["**/test4/*.md", "**/test5.md"]
+          dest: "test/actual"
+          ext: ".html"
+        ]
+```
+
+File foo/bar/baz metadata will be found in the output yaml as
+
+```yaml
+  foo:
+    bar:
+      baz:
+        meta:
+          <file metadata inserted here>
+```
 ### Error handling
 
 The task should fail reporting any errors encountered in pandoc.
@@ -187,7 +214,7 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 _version-0.1.8_
-* Added ability to extract metadata to yaml
+* Added ability to extract and merge metadata to yaml file(s).
 
 _version-0.1.7_ 
 * Changed test1 so it tests lodash template processing 
