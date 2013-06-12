@@ -53,8 +53,8 @@ Type: `String`
 
 Default: 
 
-- for HTML: "-t html5 --section-divs --mathjax"
-- else: ""
+- for HTML: "-t html5 --smart --section-divs --mathjax"
+- else: "-f markdown --smart"
 
 Can be used to pass any command line options along to pandoc.
 
