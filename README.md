@@ -213,6 +213,10 @@ NB. Source is in [LiveScript](http://livescript.net/).
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
 ## Release History
+
+_version-0.1.9_
+* Default pandoc options now include -S for typographically correct output.
+
 _version-0.1.8_
 * Added ability to extract and merge metadata to yaml file(s).
 

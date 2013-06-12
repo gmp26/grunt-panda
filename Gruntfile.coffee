@@ -99,7 +99,7 @@ module.exports = (grunt) ->
         files: [
           expand: true
           cwd: "test/fixtures"
-          src: ["**/test4/*.md", "**/test5.md"]
+          src: ["**/test5.md","**/test4/*.md"]
           dest: "test/actual"
           ext: ".html"
         ]

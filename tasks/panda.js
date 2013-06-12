@@ -52,7 +52,7 @@
         cmd = "pandoc";
         args = "";
         if (options.pandocOptions == null) {
-          pandocOptions = outfile.match(/.html$/) ? "-t html5 --section-divs --mathjax" : "-f markdown";
+          pandocOptions = outfile.match(/.html$/) ? "-t html5 --smart --section-divs --mathjax" : "-f markdown --smart";
         } else {
           pandocOptions = options.pandocOptions;
         }

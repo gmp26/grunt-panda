@@ -1,0 +1,9 @@
+test: 
+  fixtures: 
+    test5: 
+      meta: 
+        id: test5
+        url: "http://fruitbat.org"
+        title: Multiple representations
+        family: process
+        layout: pervasiveIdea
