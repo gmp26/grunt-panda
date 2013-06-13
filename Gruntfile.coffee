@@ -112,19 +112,14 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks "grunt-contrib-jshint"
   grunt.loadNpmTasks "grunt-contrib-clean"
   grunt.loadNpmTasks "grunt-contrib-nodeunit"
-  grunt.loadNpmTasks "grunt-contrib-concat"
   grunt.loadNpmTasks "grunt-livescript"
-
-  # Compile the panda task and tests
-  grunt.task.run "livescript"
 
   # Actually load this plugin's task(s).
   grunt.loadTasks "tasks"
 
   # Whenever the "test" task is run, first clean the "actual" dir, then run this
   # plugin's task(s), then test the result.
-  grunt.registerTask "test", ["clean", "panda", "nodeunit"]
+  grunt.registerTask "test", ["clean", "livescript", "panda", "nodeunit"]
 
   # By default, lint and run all tests.
   grunt.registerTask "default", ["test"]
-  #grunt.registerTask "default", ["jshint", "test"]
