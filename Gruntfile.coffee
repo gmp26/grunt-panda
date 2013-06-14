@@ -29,6 +29,7 @@ module.exports = (grunt) ->
         files:
           'lib/store.js': 'lib/store.ls'
           'tasks/panda.js': 'tasks/panda.ls'
+          'test/fixtures/test6/nodeModuletoRun.js': 'test/fixtures/test6/nodeModuletoRun.ls'
           'test/panda_test.js': 'test/panda_test.ls'
 
     # Configuration to be run (and then tested).
@@ -95,6 +96,7 @@ module.exports = (grunt) ->
         options:
           stripMeta: '````'
           metaDataPath: "test/actual/test6/meta.yaml"
+          pipeToModule: '../test/fixtures/test6/nodeModuleToRun.js'
 
         files: [
           expand: true

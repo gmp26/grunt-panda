@@ -29,8 +29,15 @@
         async.eachLimit(this.files, options.spawnLimit, iterator, writeYAML);
       }
       function writeYAML(){
+        var metaData, pipeTo, continuation;
         if (options.metaDataPath != null) {
-          grunt.file.write(options.metaDataPath, jsy.safeDump(meta.root()));
+          metaData = jsy.safeDump(meta.root());
+          grunt.file.write(options.metaDataPath, metaData);
+        }
+        if (options.pipeToModule != null) {
+          pipeTo = require(options.pipeToModule);
+          continuation = pipeTo(grunt);
+          continuation(meta.root());
         }
         return done();
       }

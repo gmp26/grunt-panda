@@ -87,7 +87,7 @@ exports.panda =
     test.done()
 
   test6: (test) ->
-    test.expect 2
+    test.expect 3
 
     exists = grunt.file.exists path.normalize "test/actual/test6/meta.yaml"
     test.ok(exists, "metadata yaml should be merged")
@@ -95,6 +95,11 @@ exports.panda =
     actual = grunt.file.read path.normalize "test/actual/test6/meta.yaml"
     expected = grunt.file.read path.normalize "test/expected/test6/meta.yaml"
     test.equal actual, expected, "merged yaml should match expectation"
+
+    actual = grunt.file.read path.normalize "test/actual/test6/continuation.txt"
+    expected = grunt.file.read path.normalize "test/expected/test6/continuation.txt"
+    test.equal actual, expected, "metadata should be piped to any given node module"
+
 
     test.done()
 

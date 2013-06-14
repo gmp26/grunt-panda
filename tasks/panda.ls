@@ -46,7 +46,14 @@ module.exports = (grunt) ->
 
     function writeYAML
       if options.metaDataPath?
-        grunt.file.write options.metaDataPath, jsy.safeDump meta.root!
+        metaData = jsy.safeDump meta.root!
+        grunt.file.write options.metaDataPath, metaData
+
+      if options.pipeToModule?
+        pipeTo = require options.pipeToModule
+        continuation = pipeTo(grunt)
+        continuation(meta.root!)
+
       done!
 
     function iterator(f, callback)

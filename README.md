@@ -86,6 +86,21 @@ Default: "````"
   The separator must start at the beginning of the line. 
   If no separator is seen at all, the whole content will be processed.
 
+#### metaDataPath
+Type: `String` a pathname relative to the Gruntfile
+
+Default: none
+
+If `metaDataPath` is defined, any Yaml metadata stripped from file headers is merged and written to that path.
+
+#### pipeToModule
+Type: `String` a node module path
+
+Default: none
+
+If a `pipeToModule` node module path is given, the task will `require` the module. It should return a 
+function of one parameter. The task will call that function passing the metadata object as a parameter.
+
 #### process
 Type: `Boolean` `Object`
 
@@ -157,7 +172,9 @@ multi-file capability.
         ]
 ```
 
-If metaDataPath is defined, any Yaml metadata stripped from file headers can be merged into a single file.
+If `metaDataPath` is defined, any Yaml metadata stripped from file headers is merged and written to that path.
+
+In addition, or alternatively, you can pipe the metadata to a function returned by a node module specified in `pipeToModule`.
 
 ```coffee
     panda
@@ -165,10 +182,12 @@ If metaDataPath is defined, any Yaml metadata stripped from file headers can be 
         options:
           stripMeta: '````'
           metaDataPath: "test/actual/test6/meta.yaml"
+          pipeToModule: '../test/fixtures/test6/nodeModuleToRun.js'
+
         files: [
           expand: true
           cwd: "test/fixtures"
-          src: ["**/test4/*.md", "**/test5.md"]
+          src: ["**/test5.md","**/test4/*.md"]
           dest: "test/actual"
           ext: ".html"
         ]
@@ -214,16 +233,25 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+_version-0.1.11_
+
+* Added pipeToModule option to facilitate further processing without the need to write and then read
+in a metadata file.
+
 _version-0.1.10_
+
 * Removed --section-divs option as it does not play well with raw html. The html nesting ends up broken.
 
 _version-0.1.9_
+
 * Default pandoc options now include -S for typographically correct output.
 
 _version-0.1.8_
+
 * Added ability to extract and merge metadata to yaml file(s).
 
 _version-0.1.7_ 
+
 * Changed test1 so it tests lodash template processing 
 * Improved test4 to catch issue 2
 * Fixed silly asynchronous bug by piping data direct to pandoc rather than by using
@@ -234,23 +262,30 @@ a temporary file.
 * Moved async dependency from developer to user dependencies in package.json
 
 _version-0.1.6_ 
+
 * Tests use normalised pathnmames for Windows compatibility
 
 _version-0.1.5_ 
+
 * Now works with file globbing
 
 _version-0.1.4_ 
+
 * Revised process option description
 
 _version-0.1.3_ 
+
 * Relaxed requirement for metadata heading to start with metadata delimiter.
 * Documented missing Pandoc and TeX errors
 
 _version-0.1.2_ 
+
 * Corrected option docs and usage examples
 
 _version-0.1.1_ 
+
 * Clarify purpose in docs
 
 _version-0.1.0_ 
+
 * First release
