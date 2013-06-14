@@ -100,6 +100,7 @@ Default: none
 
 If a `pipeToModule` node module path is given, the task will `require` the module. It should return a 
 function of one parameter. The task will call that function passing the metadata object as a parameter.
+If the module if given as a javascript file name, then the path must be absolute or relative to grunt-panda's Gruntfile.
 
 #### process
 Type: `Boolean` `Object`

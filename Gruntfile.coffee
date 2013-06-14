@@ -20,7 +20,7 @@ module.exports = (grunt) ->
     clean:
       tests: ["test/actual/*"]
 
-    # Compile coffee
+    # Compile livescript
     livescript:
       compile:
         options:
