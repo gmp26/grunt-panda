@@ -235,8 +235,7 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 _version-0.1.11_
 
-* Added pipeToModule option to facilitate further processing without the need to write and then read
-in a metadata file.
+* Added pipeToModule option to facilitate further processing without the need to write and then read in a metadata file.
 
 _version-0.1.10_
 
