@@ -234,6 +234,11 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+_version-0.1.12_
+
+* Fixed bug that meant a write to yaml metadata file had to be configured even though
+pipeToModule option was used instead. 
+
 _version-0.1.11_
 
 * Added pipeToModule option to facilitate further processing without the need to write and then read in a metadata file.

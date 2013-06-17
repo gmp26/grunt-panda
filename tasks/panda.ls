@@ -36,7 +36,7 @@ module.exports = (grunt) ->
       spawnLimit: 1
     })
 
-    grunt.verbose.writeln "spwanLimit = #{options.spawnLimit}"
+    grunt.log.debug "spawnLimit = #{options.spawnLimit}"
 
     # Iterate over all specified file groups.
     if options.spawnLimit == 1
@@ -114,7 +114,8 @@ module.exports = (grunt) ->
 
         {yaml:yaml, md:src} = stripMeta(path, src, options.stripMeta) if options.stripMeta and options.stripMeta != ""
 
-        if options.metaDataPath? && yaml.length > 0
+        #if options.metaDataPath? && yaml.length > 0
+        if (options.metaDataPath? || options.pipeToModule?) && yaml.length > 0
           grunt.log.debug "path=#path; yaml = #yaml"
 
           #create object reference from the path

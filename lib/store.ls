@@ -3,7 +3,7 @@
 module.exports = (grunt) ->
 
   #
-  # Wrap a simple object with some accessor functions so we
+  # Wrap a simple object (actually a function) with some accessor functions so we
   # have somewhere to hang different storage and access mechanisms.
   #
   # example:

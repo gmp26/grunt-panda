@@ -106,6 +106,19 @@ module.exports = (grunt) ->
           ext: ".html"
         ]
 
+      test7:
+        options:
+          stripMeta: '````'
+          pipeToModule: '../test/fixtures/test6/nodeModuleToRun.js'
+
+        files: [
+          expand: true
+          cwd: "test/fixtures"
+          src: ["**/test5.md","**/test4/*.md"]
+          dest: "test/actual"
+          ext: ".html"
+        ]
+
     # Unit tests.
     nodeunit:
       tests: ["test/*_test.js"]

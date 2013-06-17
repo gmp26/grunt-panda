@@ -98,8 +98,16 @@ exports.panda =
 
     actual = grunt.file.read path.normalize "test/actual/test6/continuation.txt"
     expected = grunt.file.read path.normalize "test/expected/test6/continuation.txt"
-    test.equal actual, expected, "metadata should be piped to any given node module"
+    test.equal actual, expected, "metadata should also be piped to any given node module"
 
+    test.done()
+
+  test7: (test) ->
+    test.expect 1
+
+    actual = grunt.file.read path.normalize "test/actual/test6/continuation.txt"
+    expected = grunt.file.read path.normalize "test/expected/test6/continuation.txt"
+    test.equal actual, expected, "metadata should instead be piped to any given node module"
 
     test.done()
 
