@@ -7,6 +7,11 @@ This plugin requires Grunt `~0.4.1` and Pandoc.
 
 If you haven't used [Grunt](http://gruntjs.com/) before, be sure to check out the [Getting Started](http://gruntjs.com/getting-started) guide, as it explains how to create a [Gruntfile](http://gruntjs.com/sample-gruntfile) as well as install and use Grunt plugins. Once you're familiar with that process, you may install this plugin with this command:
 
+Since this plugin uses LiveScript, run `grunt livescript` before other tasks. 
+Alternatively, run grunt twice. The first time you run it you will probably get an error
+that certain javascripts do not yet exist.
+
+
 ```shell
 npm install grunt-panda --save-dev
 ```
@@ -34,7 +39,6 @@ grunt.initConfig
       # Multiple input files (i.e. src files in an array) will be
       # concatenated with a blank line between each file before
       # offering them as a single stream to pandoc.
-
 ```
 
 ### Options
@@ -231,6 +235,12 @@ Fatal error: Command failed: pandoc: Error producing PDF from TeX source.
 NB. Source is in [LiveScript](http://livescript.net/).
 
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
+
+## Release History
+
+_version-0.1.13_
+
+* Removed some debug logging. Revised Getting Started advice. 
 
 ## Release History
 

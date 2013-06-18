@@ -24,12 +24,12 @@ module.exports = (grunt) ->
 
   store.setPathData = (path, data) ->
 
-    grunt.log.debug "path=#path"
-    grunt.log.debug "data=#data"
+    #grunt.log.debug "path=#path"
+    #grunt.log.debug "data=#data"
 
     accPaths = (names, data, acc) ->
 
-      grunt.log.debug "accPaths: names = #names"
+      #grunt.log.debug "accPaths: names = #names"
 
       if names.length == 0
         grunt.fatal "empty store path"
@@ -45,7 +45,7 @@ module.exports = (grunt) ->
       if typeof data != 'object'
         grunt.fatal "data is not an object: #data"
       names = names.filter (name)->name && name.length > 0
-      grunt.log.debug "names = #names"
+      #grunt.log.debug "names = #names"
       accPaths names, data, obj
 
     pathToObj (path.split '/'), data, root

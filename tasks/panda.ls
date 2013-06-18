@@ -36,7 +36,7 @@ module.exports = (grunt) ->
       spawnLimit: 1
     })
 
-    grunt.log.debug "spawnLimit = #{options.spawnLimit}"
+    #grunt.log.debug "spawnLimit = #{options.spawnLimit}"
 
     # Iterate over all specified file groups.
     if options.spawnLimit == 1
@@ -116,7 +116,7 @@ module.exports = (grunt) ->
 
         #if options.metaDataPath? && yaml.length > 0
         if (options.metaDataPath? || options.pipeToModule?) && yaml.length > 0
-          grunt.log.debug "path=#path; yaml = #yaml"
+          #grunt.log.debug "path=#path; yaml = #yaml"
 
           #create object reference from the path
           p = pathUtils.normalize path
@@ -136,11 +136,11 @@ module.exports = (grunt) ->
       matches = content.match yamlre
 
       if(matches)
-        grunt.log.debug("#{path} has metadata")
+        #grunt.log.debug("#{path} has metadata")
         yaml = matches[1]
         md = lf + content.substr matches[0].length
       else
-        grunt.log.debug("#{path} has no metadata")
+        #grunt.log.debug("#{path} has no metadata")
         yaml = ""
         md = lflf + content
 

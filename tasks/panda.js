@@ -22,7 +22,6 @@
         infile: "tmp/inputs.md",
         spawnLimit: 1
       });
-      grunt.log.debug("spawnLimit = " + options.spawnLimit);
       if (options.spawnLimit === 1) {
         async.eachSeries(this.files, iterator, writeYAML);
       } else {
@@ -97,7 +96,6 @@
             ref$ = stripMeta(path, src, options.stripMeta), yaml = ref$.yaml, src = ref$.md;
           }
           if ((options.metaDataPath != null || options.pipeToModule != null) && yaml.length > 0) {
-            grunt.log.debug("path=" + path + "; yaml = " + yaml);
             p = pathUtils.normalize(path);
             basename = pathUtils.basename(p, '.md');
             dirname = pathUtils.dirname(p);
@@ -113,11 +111,9 @@
         var matches, yaml, md;
         matches = content.match(yamlre);
         if (matches) {
-          grunt.log.debug(path + " has metadata");
           yaml = matches[1];
           md = lf + content.substr(matches[0].length);
         } else {
-          grunt.log.debug(path + " has no metadata");
           yaml = "";
           md = lflf + content;
         }

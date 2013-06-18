@@ -137,4 +137,4 @@ module.exports = (grunt) ->
   grunt.registerTask "test", ["clean", "livescript", "panda", "nodeunit"]
 
   # By default, lint and run all tests.
-  grunt.registerTask "default", ["test"]
+  grunt.registerTask "default", ["livescript", "test"]
