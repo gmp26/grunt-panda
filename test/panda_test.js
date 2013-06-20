@@ -1,8 +1,9 @@
 (function(){
   "use strict";
-  var grunt, path;
+  var grunt, path, postProcess;
   grunt = require("grunt");
   path = require("path");
+  postProcess = require("../lib/postProcess.js");
   exports.panda = {
     setUp: function(done){
       return done();
@@ -63,23 +64,12 @@
     },
     test6: function(test){
       var exists, actual, expected;
-      test.expect(3);
+      test.expect(2);
       exists = grunt.file.exists(path.normalize("test/actual/test6/meta.yaml"));
       test.ok(exists, "metadata yaml should be merged");
       actual = grunt.file.read(path.normalize("test/actual/test6/meta.yaml"));
       expected = grunt.file.read(path.normalize("test/expected/test6/meta.yaml"));
-      test.equal(actual, expected, "merged yaml should match expectation");
-      actual = grunt.file.read(path.normalize("test/actual/test6/continuation.txt"));
-      expected = grunt.file.read(path.normalize("test/expected/test6/continuation.txt"));
-      test.equal(actual, expected, "metadata should also be piped to any given node module");
-      return test.done();
-    },
-    test7: function(test){
-      var actual, expected;
-      test.expect(1);
-      actual = grunt.file.read(path.normalize("test/actual/test6/continuation.txt"));
-      expected = grunt.file.read(path.normalize("test/expected/test6/continuation.txt"));
-      test.equal(actual, expected, "metadata should instead be piped to any given node module");
+      test.equal(actual, expected);
       return test.done();
     }
   };

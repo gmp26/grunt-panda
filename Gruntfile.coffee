@@ -5,6 +5,9 @@
 # * Licensed under the MIT license.
 #
 "use strict"
+
+postProcess = require "./lib/postProcess.js"
+
 module.exports = (grunt) ->
 
   # Project configuration.
@@ -27,6 +30,7 @@ module.exports = (grunt) ->
           bare: false
           prelude: true
         files:
+          'lib/postProcess.js': 'lib/postProcess.ls'
           'lib/store.js': 'lib/store.ls'
           'tasks/panda.js': 'tasks/panda.ls'
           'test/fixtures/test6/nodeModuletoRun.js': 'test/fixtures/test6/nodeModuletoRun.ls'
@@ -96,20 +100,7 @@ module.exports = (grunt) ->
         options:
           stripMeta: '````'
           metaDataPath: "test/actual/test6/meta.yaml"
-          pipeToModule: '../test/fixtures/test6/nodeModuleToRun.js'
-
-        files: [
-          expand: true
-          cwd: "test/fixtures"
-          src: ["**/test5.md","**/test4/*.md"]
-          dest: "test/actual"
-          ext: ".html"
-        ]
-
-      test7:
-        options:
-          stripMeta: '````'
-          pipeToModule: '../test/fixtures/test6/nodeModuleToRun.js'
+          postProcess: postProcess
 
         files: [
           expand: true

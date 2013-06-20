@@ -1,6 +1,7 @@
 "use strict"
 grunt = require "grunt"
 path = require "path"
+postProcess = require "../lib/postProcess.js"
 
 #
 #  ======== A Handy Little Nodeunit Reference ========
@@ -87,28 +88,16 @@ exports.panda =
     test.done()
 
   test6: (test) ->
-    test.expect 3
+    test.expect 2
 
     exists = grunt.file.exists path.normalize "test/actual/test6/meta.yaml"
     test.ok(exists, "metadata yaml should be merged")
 
     actual = grunt.file.read path.normalize "test/actual/test6/meta.yaml"
     expected = grunt.file.read path.normalize "test/expected/test6/meta.yaml"
-    test.equal actual, expected, "merged yaml should match expectation"
-
-    actual = grunt.file.read path.normalize "test/actual/test6/continuation.txt"
-    expected = grunt.file.read path.normalize "test/expected/test6/continuation.txt"
-    test.equal actual, expected, "metadata should also be piped to any given node module"
+    test.equal actual, expected
 
     test.done()
 
-  test7: (test) ->
-    test.expect 1
-
-    actual = grunt.file.read path.normalize "test/actual/test6/continuation.txt"
-    expected = grunt.file.read path.normalize "test/expected/test6/continuation.txt"
-    test.equal actual, expected, "metadata should instead be piped to any given node module"
-
-    test.done()
 
 

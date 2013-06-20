@@ -46,9 +46,14 @@ module.exports = (grunt) ->
 
     function writeYAML
       if options.metaDataPath?
-        metaData = jsy.safeDump meta.root!
+        debugger
+        metaData = jsy.safeDump if options.postProcess?
+          options.postProcess grunt, meta.root!
+        else
+          meta.root!
         grunt.file.write options.metaDataPath, metaData
 
+      # deprecated
       if options.pipeToModule?
         pipeTo = require options.pipeToModule
         continuation = pipeTo(grunt)

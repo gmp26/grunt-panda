@@ -97,7 +97,7 @@ Default: none
 
 If `metaDataPath` is defined, any Yaml metadata stripped from file headers is merged and written to that path.
 
-#### pipeToModule
+#### pipeToModule (deprecated)
 Type: `String` a node module path
 
 Default: none
@@ -105,6 +105,11 @@ Default: none
 If a `pipeToModule` node module path is given, the task will `require` the module. It should return a 
 function of one parameter. The task will call that function passing the metadata object as a parameter.
 If the module if given as a javascript file name, then the path must be absolute or relative to grunt-panda's Gruntfile.
+
+#### postProcess
+Type: `Function` (grunt, metadata) -> metadata
+
+* If a postProcess function is given, panda  passes any generated metadata object to it. The function acts as a filter, returning the metadata object transformed in some way. Typically useful for making future searches faster.
 
 #### process
 Type: `Boolean` `Object`
@@ -236,7 +241,13 @@ NB. Source is in [LiveScript](http://livescript.net/).
 
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code using [Grunt](http://gruntjs.com/).
 
+
 ## Release History
+
+_version-0.2.1_
+
+* Revised behaviour so panda now always generates an aggregate yaml file, optionally passing the file
+through a filter before writing it. The filter is typically used by an application to expand the data to speed up future searches - e.g. by making references bidirectional, or preparing contexts for page generation.
 
 _version-0.1.13_
 

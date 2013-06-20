@@ -30,7 +30,9 @@
       function writeYAML(){
         var metaData, pipeTo, continuation;
         if (options.metaDataPath != null) {
-          metaData = jsy.safeDump(meta.root());
+          metaData = jsy.safeDump(options.postProcess != null
+            ? options.postProcess(grunt, meta.root())
+            : meta.root());
           grunt.file.write(options.metaDataPath, metaData);
         }
         if (options.pipeToModule != null) {
