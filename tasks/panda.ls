@@ -131,6 +131,12 @@ module.exports = (grunt) ->
           metadata = {}
           metadata.meta = jsy.safeLoad yaml
           pathname = (dirname + "/" + basename)
+
+          # replace root of path if necessary
+          if options.metaReplace?
+            re = new RegExp "^#{options.metaReplace}"
+            pathname = pathname.replace re, (options.metaReplacement ? "")
+
           meta.setPathData pathname, metadata
 
         return src

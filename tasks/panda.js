@@ -30,6 +30,7 @@
       function writeYAML(){
         var metaData, pipeTo, continuation;
         if (options.metaDataPath != null) {
+          debugger;
           metaData = jsy.safeDump(options.postProcess != null
             ? options.postProcess(grunt, meta.root())
             : meta.root());
@@ -84,7 +85,7 @@
       }
       function concatenate(fpaths, options){
         return fpaths.map(function(path){
-          var src, ref$, yaml, p, basename, dirname, metadata, pathname;
+          var src, ref$, yaml, p, basename, dirname, metadata, pathname, re;
           grunt.verbose.writeln("Processing " + path);
           src = grunt.file.read(path);
           if (typeof options.process === "function") {
@@ -104,6 +105,10 @@
             metadata = {};
             metadata.meta = jsy.safeLoad(yaml);
             pathname = dirname + "/" + basename;
+            if (options.metaReplace != null) {
+              re = new RegExp("^" + options.metaReplace);
+              pathname = pathname.replace(re, (ref$ = options.metaReplacement) != null ? ref$ : "");
+            }
             meta.setPathData(pathname, metadata);
           }
           return src;

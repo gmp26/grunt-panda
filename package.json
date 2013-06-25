@@ -1,7 +1,7 @@
 {
   "name": "grunt-panda",
   "description": "Convert documents (often to/from markdown) using pandoc while extracting YAML metadata",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "homepage": "https://github.com/gmp26/grunt-panda",
   "author": {
     "name": "Mike Pearson",

@@ -11,6 +11,8 @@ module.exports = (grunt) ->
   #   meta = makeStore()
   #   meta.setPathData 'foo/bar/index', yamlData
   #
+  pathUtils = require 'path'
+
   root = {}
 
   store = -> # we might make this function persist the data?
@@ -48,7 +50,7 @@ module.exports = (grunt) ->
       #grunt.log.debug "names = #names"
       accPaths names, data, obj
 
-    pathToObj (path.split '/'), data, root
+    pathToObj (path.split pathUtils.sep), data, root
     return store
 
   return store

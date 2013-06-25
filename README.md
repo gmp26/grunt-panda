@@ -52,6 +52,26 @@ The path of the temporary file used to accumulate multiple input files
 that are being concatenated before sending them to pandoc. Relative paths
 are relative to the GruntFile location.
 
+#### metaReplace
+Type: `String`
+
+Default: null
+
+If the string matches the root of the file path (which usually starts with whatever is
+specified in the files cwd option), then this root will be replaced in the output metadata.
+The file foo/bar/bat.md normally generates metadata in foo.bar.bat.meta, but if metaReplace
+were "foo/", the metadata would appear in bar.bat.meta.
+
+#### metaReplacement
+Type: `String`
+
+Default: null
+
+If a valid metaReplace string is given (which can be ""), then that string will be replaced with the
+given replacement in the output metadata.
+e.g. The file foo/bar/bat.md normally generates metadata in foo.bar.bat.meta, but if metaReplace
+were "foo/bar", and metaReplace were "baz", the metadata would appear in baz.bat.meta.
+
 #### pandocOptions
 Type: `String`
 
@@ -243,6 +263,11 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 
 ## Release History
+
+_version-0.2.2_
+
+* Added metaReplace and metaReplacement options. These are useful in order to adjust the paths inside metadata
+to convenient values no matter where your source markdown lives.
 
 _version-0.2.1_
 

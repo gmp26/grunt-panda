@@ -99,5 +99,14 @@ exports.panda =
 
     test.done()
 
+  test7: (test) ->
+    test.expect 1
+
+    actual = grunt.file.read path.normalize "test/actual/test7/meta.yaml"
+    expected = grunt.file.read path.normalize "test/expected/test7/meta.yaml"
+    test.equal actual, expected, "yaml paths should be modified by metaReplace and metaReplacement"
+
+    test.done()
+
 
 
