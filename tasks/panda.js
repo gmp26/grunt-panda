@@ -20,7 +20,8 @@
         separator: lflf,
         process: false,
         infile: "tmp/inputs.md",
-        spawnLimit: 1
+        spawnLimit: 1,
+        metaDataVar: "metadata"
       });
       if (options.spawnLimit === 1) {
         async.eachSeries(this.files, iterator, writeYAML);
@@ -30,12 +31,12 @@
       function writeYAML(){
         var metaData, pipeTo, continuation;
         if (options.metaDataPath != null) {
-          debugger;
           metaData = jsy.safeDump(options.postProcess != null
             ? options.postProcess(grunt, meta.root())
             : meta.root());
           grunt.file.write(options.metaDataPath, metaData);
         }
+        grunt.config.set(options.metaDataVar, metaData);
         if (options.pipeToModule != null) {
           pipeTo = require(options.pipeToModule);
           continuation = pipeTo(grunt);

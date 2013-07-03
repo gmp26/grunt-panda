@@ -79,6 +79,11 @@
       expected = grunt.file.read(path.normalize("test/expected/test7/meta.yaml"));
       test.equal(actual, expected, "yaml paths should be modified by metaReplace and metaReplacement");
       return test.done();
+    },
+    test8: function(test){
+      test.expect(1);
+      test.ok(grunt.config.get("metadata"));
+      return test.done();
     }
   };
 }).call(this);

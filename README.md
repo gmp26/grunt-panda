@@ -117,6 +117,14 @@ Default: none
 
 If `metaDataPath` is defined, any Yaml metadata stripped from file headers is merged and written to that path.
 
+#### metaDataVar
+Type: `String` a variable name
+
+Default: 'metadata'
+
+Writes the metadata to this key in the grunt configuration. Later tasks in the grunt chain can read the metadata
+with grunt.config.get(options.metaDataVar).
+
 #### pipeToModule (deprecated)
 Type: `String` a node module path
 

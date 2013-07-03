@@ -34,6 +34,7 @@ module.exports = (grunt) ->
       process: false
       infile: "tmp/inputs.md"
       spawnLimit: 1
+      metaDataVar: "metadata"
     })
 
     #grunt.log.debug "spawnLimit = #{options.spawnLimit}"
@@ -46,12 +47,13 @@ module.exports = (grunt) ->
 
     function writeYAML
       if options.metaDataPath?
-        debugger
         metaData = jsy.safeDump if options.postProcess?
           options.postProcess grunt, meta.root!
         else
           meta.root!
         grunt.file.write options.metaDataPath, metaData
+
+      grunt.config.set options.metaDataVar, metaData
 
       # deprecated
       if options.pipeToModule?

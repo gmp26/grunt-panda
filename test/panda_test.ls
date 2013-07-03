@@ -108,5 +108,13 @@ exports.panda =
 
     test.done()
 
+  test8: (test) ->
+    test.expect 1
+
+    # should write to grunt config metadata by default
+    test.ok grunt.config.get "metadata"
+
+    test.done()
+
 
 
