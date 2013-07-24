@@ -125,6 +125,13 @@ Default: 'metadata'
 Writes the metadata to this key in the grunt configuration. Later tasks in the grunt chain can read the metadata
 with grunt.config.get(options.metaDataVar).
 
+#### metaOnly
+Type: `Boolean`
+
+Default: false
+
+Don't run pandoc - only generate metadata.
+
 #### pipeToModule (deprecated)
 Type: `String` a node module path
 
@@ -134,7 +141,7 @@ If a `pipeToModule` node module path is given, the task will `require` the modul
 function of one parameter. The task will call that function passing the metadata object as a parameter.
 If the module if given as a javascript file name, then the path must be absolute or relative to grunt-panda's Gruntfile.
 
-#### postProcess
+#### postProcess (deprecated)
 Type: `Function` (grunt, metadata) -> metadata
 
 * If a postProcess function is given, panda  passes any generated metadata object to it. The function acts as a filter, returning the metadata object transformed in some way. Typically useful for making future searches faster.
@@ -272,6 +279,16 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+_version-0.2.4_
+
+* added metaOnly option which creates only the metadata and does not run pandoc. Useful for 2 pass processing.
+
+* added
+
+_version-0.2.3_
+
+* Metadata is now written to the grunt configuraion variable defined in the metaDataVar option.
+
 _version-0.2.2_
 
 * Added metaReplace and metaReplacement options. These are useful in order to adjust the paths inside metadata
@@ -285,8 +302,6 @@ through a filter before writing it. The filter is typically used by an applicati
 _version-0.1.13_
 
 * Removed some debug logging. Revised Getting Started advice. 
-
-## Release History
 
 _version-0.1.12_
 

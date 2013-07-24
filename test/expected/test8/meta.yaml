@@ -1,0 +1,33 @@
+foo: 
+  test4: 
+    test4input1: 
+      meta: 
+        layout: resource
+        clearance: 0
+        keywords: null
+        resourceType: RT2
+        highlight: null
+        stids1: 
+          - G2
+        stids2: null
+        pvids1: null
+        pvids2: 
+          - PI1
+          - PI2
+    test4input2: 
+      meta: 
+        title: test4input2
+    test4input3: 
+      meta: 
+        layout: resource
+        clearance: 0
+        keywords: null
+        resourceType: RT2
+        highlight: null
+        stids1: 
+          - G2
+        stids2: null
+        pvids1: null
+        pvids2: 
+          - PI1
+          - PI2

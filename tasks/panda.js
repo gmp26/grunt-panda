@@ -21,8 +21,9 @@
         process: false,
         infile: "tmp/inputs.md",
         spawnLimit: 1,
-        metaDataVar: "metadata"
+        metaOnly: false
       });
+      grunt.log.debug("options.process = " + options.process);
       if (options.spawnLimit === 1) {
         async.eachSeries(this.files, iterator, writeYAML);
       } else {
@@ -36,7 +37,9 @@
             : meta.root());
           grunt.file.write(options.metaDataPath, metaData);
         }
-        grunt.config.set(options.metaDataVar, metaData);
+        if (options.metaDataVar != null) {
+          grunt.config.set(options.metaDataVar, metaData);
+        }
         if (options.pipeToModule != null) {
           pipeTo = require(options.pipeToModule);
           continuation = pipeTo(grunt);
@@ -55,40 +58,45 @@
           }
         });
         input = concatenate(fpaths, options);
-        infile = options.infile;
-        outfile = f.dest;
-        grunt.verbose.writeln("making directory " + pathUtils.dirname(outfile));
-        grunt.file.mkdir(pathUtils.dirname(outfile));
-        cmd = "pandoc";
-        args = "";
-        if (options.pandocOptions == null) {
-          pandocOptions = outfile.match(/.html$/) ? "-t html5 --smart --mathjax" : "-f markdown --smart";
-        } else {
-          pandocOptions = options.pandocOptions;
-        }
-        args = ("-o " + outfile + " " + pandocOptions).split(" ");
-        grunt.verbose.writeln(cmd + " " + args.join(' '));
-        child = spawn(cmd, args);
-        child.setEncoding = 'utf-8';
-        grunt.verbose.writeln(child.stdin.end(input));
-        child.stderr.on('data', function(data){
-          return grunt.verbose.writeln('stderr: ' + data);
-        });
-        child.stdout.on('data', function(data){
-          return grunt.verbose.writeln('stdout: ' + data);
-        });
-        return child.on('exit', function(err){
-          if (err) {
-            grunt.verbose.writeln('pandoc exited with code ' + err);
+        if (!options.metaOnly) {
+          infile = options.infile;
+          outfile = f.dest;
+          grunt.verbose.writeln("making directory " + pathUtils.dirname(outfile));
+          grunt.file.mkdir(pathUtils.dirname(outfile));
+          cmd = "pandoc";
+          args = "";
+          if (options.pandocOptions == null) {
+            pandocOptions = outfile.match(/.html$/) ? "-t html5 --smart --mathjax" : "-f markdown --smart";
+          } else {
+            pandocOptions = options.pandocOptions;
           }
-          return callback(err);
-        });
+          args = ("-o " + outfile + " " + pandocOptions).split(" ");
+          grunt.verbose.writeln(cmd + " " + args.join(' '));
+          child = spawn(cmd, args);
+          child.setEncoding = 'utf-8';
+          grunt.verbose.writeln(child.stdin.end(input));
+          child.stderr.on('data', function(data){
+            return grunt.verbose.writeln('stderr: ' + data);
+          });
+          child.stdout.on('data', function(data){
+            return grunt.verbose.writeln('stdout: ' + data);
+          });
+          return child.on('exit', function(err){
+            if (err) {
+              grunt.verbose.writeln('pandoc exited with code ' + err);
+            }
+            return callback(err);
+          });
+        } else {
+          return callback(0);
+        }
       }
       function concatenate(fpaths, options){
         return fpaths.map(function(path){
           var src, ref$, yaml, p, basename, dirname, metadata, pathname, re;
           grunt.verbose.writeln("Processing " + path);
           src = grunt.file.read(path);
+          debugger;
           if (typeof options.process === "function") {
             src = options.process(src, path);
           } else {
@@ -111,6 +119,9 @@
               pathname = pathname.replace(re, (ref$ = options.metaReplacement) != null ? ref$ : "");
             }
             meta.setPathData(pathname, metadata);
+            if (options.metaOnly) {
+              src = "";
+            }
           }
           return src;
         }).join(options.separator);

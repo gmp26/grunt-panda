@@ -125,6 +125,41 @@ module.exports = (grunt) ->
           ext: ".html"
         ]
 
+      test8:
+        options:
+          stripMeta: '````'
+          metaDataPath: "test/actual/test8/meta.yaml"
+          metaReplace: "test/fixtures"
+          metaReplacement: "foo"
+          metaDataVar: "test8Metadata"
+          metaOnly: true
+
+        files: [
+          expand: true
+          cwd: "test/fixtures/test4"
+          src: ["*.md"]
+          dest: "test/actual/test8"
+          ext: ".html"
+        ]
+
+
+      test9:
+        options:
+          stripMeta: '````'
+          #metaDataPath: "test/actual/test9/meta.yaml"
+          metaReplace: "test/fixtures"
+          metaReplacement: "foo"
+          #metaDataVar: "test9Metadata"
+        files: [
+          expand: true
+          cwd: "test/fixtures/test4"
+          src: ["*.md"]
+          dest: "test/actual/test9"
+          ext: ".html"
+        ]
+
+
+
     # Unit tests.
     nodeunit:
       tests: ["test/*_test.js"]

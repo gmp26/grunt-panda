@@ -1,5 +1,6 @@
 "use strict"
 grunt = require "grunt"
+jsy = require 'js-yaml'
 path = require "path"
 postProcess = require "../lib/postProcess.js"
 
@@ -102,6 +103,8 @@ exports.panda =
   test7: (test) ->
     test.expect 1
 
+    grunt.log.debug "*** test7 ***"
+
     actual = grunt.file.read path.normalize "test/actual/test7/meta.yaml"
     expected = grunt.file.read path.normalize "test/expected/test7/meta.yaml"
     test.equal actual, expected, "yaml paths should be modified by metaReplace and metaReplacement"
@@ -109,12 +112,48 @@ exports.panda =
     test.done()
 
   test8: (test) ->
-    test.expect 1
+    test.expect 4
 
-    # should write to grunt config metadata by default
-    test.ok grunt.config.get "metadata"
+    # should write to grunt config metaDataVar by default
+    test.ok grunt.config.get "test8Metadata"
+
+    # metadata file should exist
+    actual = grunt.file.read path.normalize "test/actual/test8/meta.yaml"
+    expected = grunt.file.read path.normalize "test/expected/test8/meta.yaml"
+    test.equal actual, expected, "correct metadata should be generated"
+
+    # metadata file content should equal metadata
+    actual2 = jsy.safeLoad grunt.config.get "test8Metadata"
+    expected2 = grunt.file.readYAML path.normalize "test/expected/test8/meta.yaml"
+    test.deepEqual actual2, expected2, "correct metadata in metadataVar"
+
+
+    # html should not be generated
+    notThere1 = !grunt.file.exists path.normalize "test/actual/test8/test4input1.html"
+    notThere2 = !grunt.file.exists path.normalize "test/actual/test8/test4input2.html"
+    notThere3 = !grunt.file.exists path.normalize "test/actual/test8/test4input3.html"
+    test.ok notThere1 && notThere2 && notThere3, "html should not be generated"
 
     test.done()
+
+  test9: (test) ->
+    test.expect 2
+
+    # metadata file should not exist
+    notThere = !grunt.file.exists path.normalize "test/actual/test9/meta.yaml"
+    test.ok notThere, "metadata file should not exist"
+
+
+    # pandoc should have generated html
+    there1 = grunt.file.exists path.normalize "test/actual/test9/test4input1.html"
+    there2 = grunt.file.exists path.normalize "test/actual/test9/test4input2.html"
+    there3 = grunt.file.exists path.normalize "test/actual/test9/test4input3.html"
+    test.ok there1 && there2 && there3, "html should be generated"
+
+    test.done()
+
+
+
 
 
 

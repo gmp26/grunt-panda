@@ -34,9 +34,10 @@ module.exports = (grunt) ->
       process: false
       infile: "tmp/inputs.md"
       spawnLimit: 1
-      metaDataVar: "metadata"
+      metaOnly: false
     })
 
+    grunt.log.debug "options.process = #{options.process}"
     #grunt.log.debug "spawnLimit = #{options.spawnLimit}"
 
     # Iterate over all specified file groups.
@@ -53,7 +54,8 @@ module.exports = (grunt) ->
           meta.root!
         grunt.file.write options.metaDataPath, metaData
 
-      grunt.config.set options.metaDataVar, metaData
+      if options.metaDataVar?
+        grunt.config.set options.metaDataVar, metaData
 
       # deprecated
       if options.pipeToModule?
@@ -74,39 +76,43 @@ module.exports = (grunt) ->
 
       input = concatenate fpaths, options
 
-      infile = options.infile
-      outfile = f.dest
+      if !options.metaOnly
 
-      grunt.verbose.writeln "making directory #{pathUtils.dirname(outfile)}"
-      grunt.file.mkdir pathUtils.dirname(outfile)
+        infile = options.infile
+        outfile = f.dest
 
-      cmd = "pandoc"
-      args = ""
+        grunt.verbose.writeln "making directory #{pathUtils.dirname(outfile)}"
+        grunt.file.mkdir pathUtils.dirname(outfile)
 
-      if !options.pandocOptions?
-        pandocOptions = if outfile.match /.html$/ then "-t html5 --smart --mathjax" else "-f markdown --smart"
+        cmd = "pandoc"
+        args = ""
+
+        if !options.pandocOptions?
+          pandocOptions = if outfile.match /.html$/ then "-t html5 --smart --mathjax" else "-f markdown --smart"
+        else
+          pandocOptions = options.pandocOptions
+
+        args = "-o #{outfile} #{pandocOptions}".split(" ")
+
+        grunt.verbose.writeln "#cmd #{args.join ' '}"
+
+        child = spawn cmd, args
+        child.setEncoding = 'utf-8'
+
+        grunt.verbose.writeln child.stdin.end input
+
+        child.stderr.on 'data', (data) ->
+          grunt.verbose.writeln 'stderr: ' + data
+
+        child.stdout.on 'data', (data) ->
+          grunt.verbose.writeln 'stdout: ' + data
+
+        child.on 'exit', (err) ->
+          if err
+            grunt.verbose.writeln 'pandoc exited with code ' + err
+          callback err
       else
-        pandocOptions = options.pandocOptions
-
-      args = "-o #{outfile} #{pandocOptions}".split(" ")
-
-      grunt.verbose.writeln "#cmd #{args.join ' '}"
-
-      child = spawn cmd, args
-      child.setEncoding = 'utf-8'
-
-      grunt.verbose.writeln child.stdin.end input
-
-      child.stderr.on 'data', (data) ->
-        grunt.verbose.writeln 'stderr: ' + data
-
-      child.stdout.on 'data', (data) ->
-        grunt.verbose.writeln 'stdout: ' + data
-
-      child.on 'exit', (err) ->
-        if err
-          grunt.verbose.writeln 'pandoc exited with code ' + err
-        callback err
+        callback 0
 
     function concatenate (fpaths, options)
 
@@ -114,6 +120,7 @@ module.exports = (grunt) ->
         grunt.verbose.writeln "Processing #{path}"
 
         src = grunt.file.read(path)
+        debugger
         if typeof options.process is "function"
           src = options.process(src, path)
         else
@@ -140,6 +147,9 @@ module.exports = (grunt) ->
             pathname = pathname.replace re, (options.metaReplacement ? "")
 
           meta.setPathData pathname, metadata
+
+          if options.metaOnly
+            src = ""
 
         return src
       ).join(options.separator)
