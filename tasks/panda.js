@@ -10,7 +10,7 @@
     var lf, lflf, yamlre;
     lf = grunt.util.linefeed;
     lflf = lf + lf;
-    yamlre = /^````$\n^([^`]*)````/m;
+    yamlre = /^````$.?\n.?^([^`]*)````/m;
     return grunt.registerMultiTask("panda", "Convert documents using pandoc", function(){
       var done, meta, options;
       done = this.async();
@@ -96,7 +96,6 @@
           var src, ref$, yaml, p, basename, dirname, metadata, pathname, re;
           grunt.verbose.writeln("Processing " + path);
           src = grunt.file.read(path);
-          debugger;
           if (typeof options.process === "function") {
             src = options.process(src, path);
           } else {

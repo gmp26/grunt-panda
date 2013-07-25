@@ -16,7 +16,7 @@ makeStore = require('../lib/store.js')
 module.exports = (grunt) ->
   lf = grunt.util.linefeed
   lflf = lf + lf
-  yamlre = /^````$\n^([^`]*)````/m
+  yamlre = /^````$.?\n.?^([^`]*)````/m
 
   # Please see the Grunt documentation for more information regarding task
   # creation: http://gruntjs.com/creating-tasks
@@ -120,7 +120,6 @@ module.exports = (grunt) ->
         grunt.verbose.writeln "Processing #{path}"
 
         src = grunt.file.read(path)
-        debugger
         if typeof options.process is "function"
           src = options.process(src, path)
         else

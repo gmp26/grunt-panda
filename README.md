@@ -279,6 +279,10 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+_version-0.2.5_
+
+* removed debugger leftovers. Yaml detection should now work on windows file too.
+
 _version-0.2.4_
 
 * added metaOnly option which creates only the metadata and does not run pandoc. Useful for 2 pass processing.
