@@ -73,7 +73,7 @@ e.g. The file foo/bar/bat.md normally generates metadata in foo.bar.bat.meta, bu
 were "foo/bar", and metaReplace were "baz", the metadata would appear in baz.bat.meta.
 
 #### pandocOptions
-Type: `String`
+Type: `String` or `Array`
 
 Default: 
 
@@ -81,6 +81,8 @@ Default:
 - else: "-f markdown --smart"
 
 Can be used to pass any command line options along to pandoc.
+
+If a string, it will be split into arguments on space characters. If an array the arguments will be used as is.
 
 #### separator 
 Type: `String`
