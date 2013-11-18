@@ -92,7 +92,10 @@ module.exports = (grunt) ->
         else
           pandocOptions = options.pandocOptions
 
-        args = "-o #{outfile} #{pandocOptions}".split(" ")
+        if typeof pandocOptions is "string"
+          pandocOptions = pandocOptions.split(" ")
+
+        args = ["-o", outfile] ++ pandocOptions
 
         grunt.verbose.writeln "#cmd #{args.join ' '}"
 

@@ -70,7 +70,10 @@
           } else {
             pandocOptions = options.pandocOptions;
           }
-          args = ("-o " + outfile + " " + pandocOptions).split(" ");
+          if (typeof pandocOptions === "string") {
+            pandocOptions = pandocOptions.split(" ");
+          }
+          args = ["-o", outfile].concat(pandocOptions);
           grunt.verbose.writeln(cmd + " " + args.join(' '));
           child = spawn(cmd, args);
           child.setEncoding = 'utf-8';
