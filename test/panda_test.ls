@@ -152,6 +152,13 @@ exports.panda =
 
     test.done()
 
+  test10: (test) ->
+    test.expect 1
+    notThere = !grunt.file.exists path.normalize "test/actual/test10/meta.yaml"
+    test.ok notThere, "metadata file should not exist due to parsing error"
+    test.done!
+   
+
 
 
 

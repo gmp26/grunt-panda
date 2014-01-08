@@ -35,6 +35,7 @@ module.exports = (grunt) ->
           'tasks/panda.js': 'tasks/panda.ls'
           'test/fixtures/test6/nodeModuletoRun.js': 'test/fixtures/test6/nodeModuletoRun.ls'
           'test/panda_test.js': 'test/panda_test.ls'
+          'test/bad_test.js': 'test/bad_test.ls'
 
     # Configuration to be run (and then tested).
     panda:
@@ -158,11 +159,24 @@ module.exports = (grunt) ->
           ext: ".html"
         ]
 
+      test10:
+        options:
+          stripMeta: '````'
+          metaDataPath: "test/actual/test10/meta.yaml"
+        files: [
+          expand: true
+          cwd: "test/fixtures/test10"
+          src: ["*.md"]
+          dest: "test/actual/test10"
+          ext: ".html"
+        ]        
+
 
 
     # Unit tests.
     nodeunit:
-      tests: ["test/*_test.js"]
+      tests: ["test/panda_test.js"]
+      badtest: ["test/bad_test.js"]
 
   # These plugins provide necessary tasks.
   grunt.loadNpmTasks "grunt-contrib-jshint"
@@ -175,7 +189,25 @@ module.exports = (grunt) ->
 
   # Whenever the "test" task is run, first clean the "actual" dir, then run this
   # plugin's task(s), then test the result.
-  grunt.registerTask "test", ["clean", "livescript", "panda", "nodeunit"]
+  grunt.registerTask "test", [
+    "clean"
+    "livescript"
+    "panda:test1"
+    "panda:test2"
+    "panda:test3"
+    "panda:test4"
+    "panda:test5"
+    "panda:test6"
+    "panda:test7"
+    "panda:test8"
+    "panda:test9"
+    "nodeunit:tests"]
+
+  # This test SHOULD fail with the error
+  #   >> error parsing YAML in test/fixtures/test10/index.md
+  #   Fatal error: JS-YAML: can not read a block mapping entry; a multiline key may not be an implicit key at line 3, column 7:
+  #     layout: resource
+  grunt.registerTask "badtest", ["clean", "livescript", "panda:test10", "nodeunit:badtest"]
 
   # By default, lint and run all tests.
   grunt.registerTask "default", ["livescript", "test"]

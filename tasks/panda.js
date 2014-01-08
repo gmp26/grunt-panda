@@ -96,7 +96,7 @@
       }
       function concatenate(fpaths, options){
         return fpaths.map(function(path){
-          var src, ref$, yaml, p, basename, dirname, metadata, pathname, re;
+          var src, ref$, yaml, p, basename, dirname, metadata, e, pathname, re;
           grunt.verbose.writeln("Processing " + path);
           src = grunt.file.read(path);
           if (typeof options.process === "function") {
@@ -114,7 +114,13 @@
             basename = pathUtils.basename(p, '.md');
             dirname = pathUtils.dirname(p);
             metadata = {};
-            metadata.meta = jsy.safeLoad(yaml);
+            try {
+              metadata.meta = jsy.safeLoad(yaml);
+            } catch (e$) {
+              e = e$;
+              grunt.log.error("error parsing YAML in " + p);
+              grunt.fatal(e);
+            }
             pathname = dirname + "/" + basename;
             if (options.metaReplace != null) {
               re = new RegExp("^" + options.metaReplace);

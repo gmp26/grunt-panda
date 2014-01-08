@@ -281,6 +281,10 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
+_version-0.2.7_
+
+* Aborts with an error message if there is a YAML error. See `grunt badtest`.
+
 _version-0.2.6_
 
 * Allows an array of pandocOptions.

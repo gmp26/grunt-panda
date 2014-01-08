@@ -108,6 +108,13 @@
       there3 = grunt.file.exists(path.normalize("test/actual/test9/test4input3.html"));
       test.ok(there1 && there2 && there3, "html should be generated");
       return test.done();
+    },
+    test10: function(test){
+      var notThere;
+      test.expect(1);
+      notThere = !grunt.file.exists(path.normalize("test/actual/test10/meta.yaml"));
+      test.ok(notThere, "metadata file should not exist due to parsing error");
+      return test.done();
     }
   };
 }).call(this);

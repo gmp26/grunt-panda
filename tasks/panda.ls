@@ -140,7 +140,12 @@ module.exports = (grunt) ->
           dirname = pathUtils.dirname p
 
           metadata = {}
-          metadata.meta = jsy.safeLoad yaml
+          try
+            metadata.meta = jsy.safeLoad yaml
+          catch e
+            grunt.log.error "error parsing YAML in #{p}"
+            grunt.fatal e
+
           pathname = (dirname + "/" + basename)
 
           # replace root of path if necessary
