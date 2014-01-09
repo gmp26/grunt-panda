@@ -283,6 +283,10 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 _version-0.2.7_
 
+* Reduced grunt dependency to ~0.4.1 from ~0.4.2
+
+_version-0.2.7_
+
 * Aborts with an error message if there is a YAML error. See `grunt badtest`.
 
 _version-0.2.6_
