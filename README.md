@@ -281,7 +281,11 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 ## Release History
 
-_version-0.2.7_
+_version-0.2.9_
+
+* Metadata delimiters now allow trailing white-space
+
+_version-0.2.8_
 
 * Reduced grunt dependency to ~0.4.1 from ~0.4.2
 

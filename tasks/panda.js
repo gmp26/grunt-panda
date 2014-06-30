@@ -10,7 +10,7 @@
     var lf, lflf, yamlre;
     lf = grunt.util.linefeed;
     lflf = lf + lf;
-    yamlre = /^````$.?\n.?^([^`]*)````/m;
+    yamlre = /^````\s*$.?\n.?^([^`]*)````\s*/m;
     return grunt.registerMultiTask("panda", "Convert documents using pandoc", function(){
       var done, meta, options;
       done = this.async();

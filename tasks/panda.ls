@@ -16,7 +16,7 @@ makeStore = require('../lib/store.js')
 module.exports = (grunt) ->
   lf = grunt.util.linefeed
   lflf = lf + lf
-  yamlre = /^````$.?\n.?^([^`]*)````/m
+  yamlre = /^````\s*$.?\n.?^([^`]*)````\s*/m
 
   # Please see the Grunt documentation for more information regarding task
   # creation: http://gruntjs.com/creating-tasks
